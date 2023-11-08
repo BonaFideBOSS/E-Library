@@ -5,6 +5,7 @@
 <br>
 
 ## How to run the application locally?
+This guide is for Windows 10+ only.
 
 ### Step 1: Request the `config.py` from me
 - This file has all the secrets of the application like the database connection string and passwords.
