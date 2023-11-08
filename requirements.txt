@@ -1,0 +1,5 @@
+Flask
+Flask-Pymongo
+Flask-WTF
+email-validator
+Flask-Mail

@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% set page_title = 'Login' %}
+{% set nav_title = 'Login' %}
+
+{% block page_style %}
+<link rel="stylesheet" href="{{url_for('static',filename='custom/css/auth.css')}}">
+{% endblock %}
+
+{% block page_body %}
+
+<main class="bg-pattern p-5 text-center">
+  <div class="my-5">
+    {% if verified %}
+    <h1 class="display-1 text-custom"><i class="fa-sharp fa-regular fa-circle-check fa-lg"></i></h1>
+    <h1 class="m-0 fw-semibold">Email Verified!</h1>
+    {% else %}
+    <h1 class="display-1 text-danger"><i class="fa-sharp fa-regular fa-circle-xmark fa-lg"></i></h1>
+    <h1 class="m-0 fw-semibold">Failed to verify email address.</h1>
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}
+
+{% block page_script %}
+{% for field in form %}
+{% if field.errors %}
+{% for error in field.errors %}
+<script>notify("{{error}}")</script>
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endblock %}

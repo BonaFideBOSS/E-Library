@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+{% set page_title = 'Terms of Service' %}
+{% set nav_title = 'Terms' %}
+
+{% block page_style %}{% endblock %}
+
+{% block page_body %}
+
+<div class="bg-pattern py-5">
+  <div class="container py-5">
+    <h1 class="display-1 my-5 fw-bold">Terms of Service</h1>
+  </div>
+</div>
+
+<div class="container my-5">
+  <h2>1. Terms</h2>
+  <hr>
+  <p>By accessing this Website, accessible from <a
+      class="link-primary link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover"
+      href="//{{website_info.web_address}}">{{website_info.web_address}}</a>, you are agreeing to be bound by these
+    Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local
+    laws. If you disagree with any of these terms, you are prohibited from accessing this site. The materials contained
+    in this Website are protected by copyright and trade mark law.</p>
+
+  <h2 class="mt-5">2. Use License</h2>
+  <hr>
+  <p>Permission is granted to temporarily download one copy of the materials on {{website_info.name}}'s Website for
+    personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under
+    this license you may not:</p>
+  <ul>
+    <li>modify or copy the materials;</li>
+    <li>use the materials for any commercial purpose or for any public display;</li>
+    <li>attempt to reverse engineer any software contained on {{website_info.name}}'s Website;</li>
+    <li>remove any copyright or other proprietary notations from the materials; or</li>
+    <li>transferring the materials to another person or "mirror" the materials on any other server.</li>
+  </ul>
+  <p>This will let {{website_info.name}} to terminate upon violations of any of these restrictions. Upon termination,
+    your viewing right will also be terminated and you should destroy any downloaded materials in your possession
+    whether it is printed or electronic format.</p>
+
+  <h2 class="mt-5">3. Disclaimer</h2>
+  <hr>
+  <p>All the materials on {{website_info.name}}'s Website are provided "as is". {{website_info.name}} makes no
+    warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore,
+    {{website_info.name}} does not make any representations concerning the accuracy or reliability of the use of the
+    materials on its Website or otherwise relating to such materials or any sites linked to this Website.</p>
+
+  <h2 class="mt-5">4. Limitations</h2>
+  <hr>
+  <p>{{website_info.name}} or its suppliers will not be hold accountable for any damages that will arise with the use or
+    inability to use the materials on {{website_info.name}}'s Website, even if {{website_info.name}} or an authorize
+    representative of this Website has been notified, orally or written, of the possibility of such damage. Some
+    jurisdiction does not allow limitations on implied warranties or limitations of liability for incidental damages,
+    these limitations may not apply to you.</p>
+
+  <h2 class="mt-5">5. Revisions and Errata</h2>
+  <hr>
+  <p>The materials appearing on {{website_info.name}}'s Website may include technical, typographical, or photographic
+    errors. {{website_info.name}} will not promise that any of the materials in this Website are accurate, complete, or
+    current. {{website_info.name}} may change the materials contained on its Website at any time without notice.
+    {{website_info.name}} does not make any commitment to update the materials.</p>
+
+  <h2 class="mt-5">6. Links</h2>
+  <hr>
+  <p>{{website_info.name}} has not reviewed all of the sites linked to its Website and is not responsible for the
+    contents of any such linked site. The presence of any link does not imply endorsement by {{website_info.name}} of
+    the site. The use of any linked website is at the user's own risk.</p>
+
+  <h2 class="mt-5">7. Site Terms of Use Modifications</h2>
+  <hr>
+  <p>{{website_info.name}} may revise these Terms of Use for its Website at any time without prior notice. By using this
+    Website, you are agreeing to be bound by the current version of these Terms and Conditions of Use.</p>
+
+  <h2 class="mt-5">8. Your Privacy</h2>
+  <hr>
+  <p>Please read our <a class="link-custom link-offset-2 link-underline-opacity-75 link-underline-opacity-100-hover"
+      href="{{url_for('views.privacy')}}">Privacy Policy</a>.</p>
+
+  <h2 class="mt-5">9. Governing Law</h2>
+  <hr>
+  <p>Any claim related to {{website_info.name}}'s Website shall be governed by the laws of qa without regards to its
+    conflict of law provisions.</p>
+
+  <p class="mt-5 text-end text-secondary">Last Update: November 7, 2023</p>
+</div>
+{% endblock %}
+
+{% block page_script %}{% endblock %}

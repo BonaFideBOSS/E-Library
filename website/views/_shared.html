@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=7">
+
+  <title>{{page_title + ' • ' if page_title != 'Home'}}{{website_info.name}}</title>
+  <meta name="description" content="{{website_info.description}}">
+  <link rel="shortcut icon" href="{{url_for('static',filename='img/favicon.ico')}}" type="image/x-icon">
+
+  <meta name="csrf_token" content="{{csrf_token()}}">
+
+  <meta property="og:title" content="{{website_info.name}}">
+  <meta property="og:description" content="{{website_info.description}}">
+  <meta property="og:image" content="{{url_for('static',filename='img/logo-bg-dark.png')}}">
+  <meta property="og:url" content="{{website_info.web_address}}">
+
+  <link rel="stylesheet" href="{{url_for('static',filename='bootstrap/bootstrap.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='fontawesome/css/all.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='fontawesome/css/sharp-solid.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='fontawesome/css/sharp-regular.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='custom/css/shared.css')}}">
+
+  {% block shared_style %}{% endblock %}
+</head>
+
+<body>
+  {% block shared_body %}{% endblock %}
+
+  <div id="notification-toast" class="toast-container position-fixed top-0 end-0 p-3"></div>
+
+  <script src="{{url_for('static',filename='bootstrap/bootstrap.js')}}"></script>
+  <script src="{{url_for('static',filename='jquery.js')}}"></script>
+  <script src="{{url_for('static',filename='custom/js/shared.js')}}"></script>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <script>
+    var message = "{{message}}"
+    notify(message)
+  </script>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  {% block shared_script %}{% endblock %}
+</body>
+
+</html>

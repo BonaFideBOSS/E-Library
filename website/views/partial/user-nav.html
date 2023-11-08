@@ -1,0 +1,29 @@
+<div class="dropdown">
+
+  <button class="btn border-0 p-0" type="button" data-bs-toggle="dropdown">
+    <img class="user-avatar" src="{{session.user.avatar}}" width="40px" height="40px">
+  </button>
+
+  <div class="dropdown-menu dropdown-menu-end rounded-0 shadow-lg mt-2 p-3">
+    <a class="dropdown-item row mb-2 py-2 mx-auto" href="#">
+      <i class="fa-sharp fa-solid fa-bookmark col-2"></i>
+      <span class="col-10">My Bookmarks</span>
+    </a>
+
+    <a class="dropdown-item row mb-2 py-2 mx-auto" href="#">
+      <i class="fa-sharp fa-solid fa-user col-2"></i>
+      <span class="col-10">Account</span>
+    </a>
+
+    <hr class="dropdown-divider">
+
+    <form class="mt-2" action="{{url_for('auth.logout')}}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <button class="dropdown-item row mx-auto py-2" type="submit">
+        <i class="fa-sharp fa-solid fa-right-from-bracket col-2"></i>
+        <span class="col-10">Logout</span>
+      </button>
+    </form>
+  </div>
+
+</div>

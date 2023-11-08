@@ -1,0 +1,64 @@
+{% extends '_shared.html' %}
+
+{% block shared_style %}
+{% block page_style %}{% endblock %}
+{% endblock %}
+
+{% block shared_body %}
+<div class="container-xxl g-0 p-lg-4">
+
+  <nav class="navbar navbar-expand-lg bg-dark p-0" data-bs-theme="dark">
+    <div class="ps-0 container-fluid flex-nowrap g-lg-0">
+
+      <a class="navbar-brand bg-custom-gradient py-4 col-10 col-lg-4 text-light d-flex justify-content-center align-items-center gap-2"
+        href="/">
+        <img src="{{url_for('static',filename='img/logo-light.png')}}" width="50px">
+        <span class="fw-bold fs-2 text-light">{{website_info.name}}</span>
+      </a>
+
+      <button class="mx-auto p-0 navbar-toggler border-0 text-custom fs-1" type="button">
+        <i class="fa-sharp fa-solid fa-bars"></i>
+      </button>
+
+      <div class="collapse navbar-collapse gap-3 me-3" id="navbarNavAltMarkup">
+        <div class="ms-auto navbar-nav gap-3">
+          {% set nav_links = [
+          {"name":"Home","route":"views.home"},
+          {"name":"About","route":"views.about"},
+          {"name":"Terms","route":"views.terms"},
+          {"name":"Privacy","route":"views.privacy"},
+          ] %}
+          {% for nav_link in nav_links %}
+          {% if nav_title == nav_link.name %}
+          <a class="nav-link active text-decoration-underline link-underline-custom link-offset-4">{{nav_link.name}}</a>
+          {% else %}
+          <a class="nav-link" href="{{url_for(nav_link.route)}}">{{nav_link.name}}</a>
+          {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          {% if session.user %}
+          {% include 'partial/user-nav.html' %}
+          {% else %}
+          <a class="btn btn-dark border-0 p-2 px-4 rounded-5" href="{{url_for('auth.login')}}">Login</a>
+          <a class="btn btn-custom p-2 px-4 fw-semibold rounded-5" href="{{url_for('auth.register')}}">Register</a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  {% block page_body %}{% endblock %}
+</div>
+
+{% include 'partial/email-verification-warning.html' %}
+<div id="scroll-to-top" class="btn btn-custom rounded-0 fade-in-bottom hide">
+  <i class="fa-sharp fa-solid fa-chevron-up"></i>
+</div>
+{% endblock %}
+
+{% block shared_script %}
+{% block page_script %}{% endblock %}
+{% endblock %}
