@@ -23,3 +23,8 @@ def terms():
 @views.route("/privacy/")
 def privacy():
     return render_template("privacy.html")
+
+
+@views.route("/ping/")
+def ping():
+    return "This site is live!", 200
