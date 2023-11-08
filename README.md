@@ -1,4 +1,4 @@
-# E-Library - Online Library Management System
+# ![](https://raw.githubusercontent.com/BonaFideBOSS/E-Library/main/website/assets/img/favicon.ico) E-Library - Online Library Management System
 
 **Live site: https://elibrary.almir.info**
 
