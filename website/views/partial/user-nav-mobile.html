@@ -1,0 +1,33 @@
+<div class="accordion accordion-flush" id="user-nav-mobile">
+    <div class="accordion-item bg-transparent">
+        <h2 class="accordion-header">
+            <button class="accordion-button bg-transparent text-secondary collapsed pt-2 px-3 fs-1" type="button"
+                data-bs-toggle="collapse" data-bs-target="#user-pages">
+                My Account
+            </button>
+        </h2>
+        <div id="user-pages" class="accordion-collapse collapse" data-bs-parent="#user-nav-mobile">
+            <div class="accordion-body py-0">
+                <nav class="nav flex-column text-start fs-3">
+                    <a class="nav-link link-secondary" href="#">
+                        <i class="fa-sharp fa-solid fa-bookmark me-2 fa-fw"></i>
+                        <span>My Bookmarks</span>
+                    </a>
+
+                    <a class="nav-link link-secondary" href="#">
+                        <i class="fa-sharp fa-solid fa-user me-2 fa-fw"></i>
+                        <span>Account</span>
+                    </a>
+
+                    <form action="{{url_for('auth.logout')}}" method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button class="nav-link link-secondary" type="submit" data-show-loader="false">
+                            <i class="fa-sharp fa-solid fa-right-from-bracket me-2 fa-fw"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

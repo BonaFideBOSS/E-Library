@@ -45,8 +45,10 @@ $('form').on('submit', function () {
   const btn = $(this).find('button[type="submit"]')
   if (this.checkValidity()) {
     $(btn).attr('disabled', true)
-    $(btn).addClass('d-flex justify-content-center align-items-center gap-2 mx-auto')
-    $(btn).html(loader)
+    if ($(btn).attr('data-show-loader') != 'false') {
+      $(btn).addClass('d-flex justify-content-center align-items-center gap-2 mx-auto')
+      $(btn).html(loader)
+    }
   }
 })
 
