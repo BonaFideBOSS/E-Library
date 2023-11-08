@@ -1,6 +1,6 @@
 # E-Library - Online Library Management System
 
-**Live site: <a href="https://elibrary.almir.info" target="_blank">https://elibrary.almir.info</a>**
+**Live site: https://elibrary.almir.info**
 
 <br>
 
