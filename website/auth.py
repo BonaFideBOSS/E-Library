@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from . import db
-from .forms import RegisterForm, LoginForm, encrypt_message
+from .forms import RegisterForm, LoginForm, ForgotPassword, ResetPassword
+from .helpers import encrypt_message
 from bson import json_util, ObjectId
 from datetime import datetime
-from .mailer import mail_otp
+from .mailer import send_email_verification_mail, send_password_reset_mail
 
 db = db.db
 auth = Blueprint("auth", __name__)
@@ -33,7 +34,7 @@ def register():
         user["verified"] = False
         user["avatar"] = "/assets/img/user.jpg"
         db.Users.insert_one(user)
-        mail_otp(user["email"])
+        send_email_verification_mail(user["email"])
         add_user_to_session(user)
         flash("Successfully created a new account.")
         return redirect(url_for("views.home"))
@@ -55,12 +56,10 @@ def login():
     return render_template("auth/login.html", form=form)
 
 
-@auth.route("/resend-otp/", methods=["POST"])
-def resend_otp():
-    reason = request.args.get("reason")
+@auth.route("/resend-email-verification-mail", methods=["POST"])
+def resend_email_verification_mail():
     user_email = session["user"]["email"]
-    if reason == "email":
-        mail_otp(user_email)
+    send_email_verification_mail(user_email)
     return ""
 
 
@@ -74,12 +73,12 @@ def logout():
 @auth.route("/verify-email/")
 def verify_email():
     user_id = request.args.get("_id")
-    otp = request.args.get("otp")
+    token = request.args.get("token")
 
     verified = False
-    if user_id and otp:
+    if user_id and token:
         user = db.Users.find_one_and_update(
-            {"_id": ObjectId(user_id), "otp": otp},
+            {"_id": ObjectId(user_id), "token": token},
             {"$set": {"verified": True}},
             return_document=True,
         )
@@ -90,3 +89,37 @@ def verify_email():
 
     else:
         return redirect(url_for("views.home"))
+
+
+@auth.route("/forgot-password/", methods=["GET", "POST"])
+def forgot_password():
+    form = ForgotPassword()
+
+    if form.validate_on_submit():
+        send_password_reset_mail(form.email.data)
+        flash("Password reset link sent to your email.")
+        return redirect(url_for("auth.login"))
+
+    return render_template("auth/forgot-password.html", form=form)
+
+
+@auth.route("/reset-password/", methods=["GET", "POST"])
+def reset_password():
+    user_id = request.args.get("_id")
+    token = request.args.get("token")
+    form = ResetPassword(user_id=user_id, token=token)
+
+    if form.validate_on_submit():
+        db.Users.find_one_and_update(
+            {"_id": ObjectId(user_id), "token": token},
+            {
+                "$set": {
+                    "password": encrypt_message(form.password.data),
+                    "updated_on": datetime.utcnow(),
+                }
+            },
+        )
+        flash("Your password has been successfully updated.")
+        return redirect(url_for("auth.login"))
+
+    return render_template("auth/reset-password.html", form=form)

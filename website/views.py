@@ -10,9 +10,24 @@ def home():
     return render_template("home.html")
 
 
+@views.route("/categories/")
+def categories():
+    return render_template("categories.html")
+
+
+@views.route("/books/")
+def books():
+    return render_template("books.html")
+
+
 @views.route("/about/")
 def about():
     return render_template("about.html")
+
+
+@views.route("/contact/")
+def contact():
+    return render_template("contact.html")
 
 
 @views.route("/terms/")

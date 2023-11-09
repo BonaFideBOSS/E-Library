@@ -16,10 +16,10 @@ def get_website_name():
 # ===== Error Handling =====
 @app.errorhandler(Exception)
 def page_not_found(e):
-    return render_template("404.html"), e.code
+    return render_template("404.html"), 404
 
 
 # ===== CSRF Error Handling =====
 @app.errorhandler(CSRFError)
-def handle_csrf_error(e):
-    return e.description, 400
+def handle_csrf_error(error):
+    return error.description, 400

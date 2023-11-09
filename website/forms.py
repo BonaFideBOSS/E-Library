@@ -1,8 +1,9 @@
 from . import db
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, PasswordField
+from wtforms import StringField, EmailField, PasswordField, HiddenField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 from .helpers import encrypt_message
+from bson import ObjectId
 
 db = db.db
 
@@ -32,7 +33,7 @@ class RegisterForm(FlaskForm):
     )
 
     def validate_email(self, email):
-        user = db.Users.find_one({"email": email.data})
+        user = get_user_by_email(email.data)
         if user:
             raise ValidationError("This email is already is use.")
 
@@ -50,7 +51,7 @@ class LoginForm(FlaskForm):
         if not super().validate():
             return False
 
-        user = db.Users.find_one({"email": self.email.data})
+        user = get_user_by_email(self.email.data)
 
         if not user:
             self.email.errors.append("Email not found.")
@@ -62,3 +63,53 @@ class LoginForm(FlaskForm):
             return False
 
         return True
+
+
+class ForgotPassword(FlaskForm):
+    email = EmailField(
+        "Email", validators=[DataRequired(message="Please enter your email address.")]
+    )
+
+    def validate(self, extra_validators=None):
+        if not super().validate():
+            return False
+
+        user = get_user_by_email(self.email.data)
+        if not user:
+            self.email.errors.append("Email not found.")
+            return False
+
+        return True
+
+
+class ResetPassword(FlaskForm):
+    user_id = HiddenField()
+    token = HiddenField()
+
+    password = PasswordField(
+        "Password",
+        validators=[
+            DataRequired(message="Please enter a password."),
+            Length(min=8, message="Password must be at least 8 characters long."),
+        ],
+    )
+
+    def validate(self, extra_validators=None):
+        if not super().validate():
+            return False
+
+        user = {}
+        try:
+            user = db.Users.find_one({"_id": ObjectId(self.user_id.data)})
+        except:
+            pass
+
+        if not user or self.token.data != user["token"]:
+            self.password.errors.append("Failed to reset password.")
+            return False
+
+        return True
+
+
+def get_user_by_email(email: str):
+    return db.Users.find_one({"email": email})

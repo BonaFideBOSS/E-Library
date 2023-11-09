@@ -4,13 +4,21 @@
 {% block page_style %}{% endblock %}
 {% endblock %}
 
+{% set nav_links = [
+{"name":"Home","route":"views.home"},
+{"name":"Categories","route":"views.categories"},
+{"name":"Books","route":"views.books"},
+{"name":"About","route":"views.about"},
+{"name":"Contact","route":"views.contact"},
+] %}
+
 {% block shared_body %}
-<div class="container-xxl g-0 p-lg-4">
+<div class="p-xl-4">
 
-  <nav class="navbar navbar-expand-lg bg-dark p-0" data-bs-theme="dark">
-    <div class="ps-0 container-fluid flex-nowrap g-lg-0">
+  <nav class="navbar navbar-expand-xl bg-dark p-0" data-bs-theme="dark">
+    <div class="ps-0 container-fluid flex-nowrap g-xl-0">
 
-      <a class="navbar-brand bg-custom-gradient py-4 col-10 col-lg-4 text-light d-flex justify-content-center align-items-center gap-2"
+      <a class="navbar-brand bg-custom-gradient py-4 col-10 col-xl-4 text-light d-flex justify-content-center align-items-center gap-2"
         href="/">
         <img src="{{url_for('static',filename='img/logo-light.png')}}" width="50px">
         <span class="fw-bold fs-1 text-light">{{website_info.name}}</span>
@@ -23,12 +31,6 @@
 
       <div class="collapse navbar-collapse gap-3 me-3" id="navbarNavAltMarkup">
         <div class="ms-auto navbar-nav gap-3">
-          {% set nav_links = [
-          {"name":"Home","route":"views.home"},
-          {"name":"About","route":"views.about"},
-          {"name":"Terms","route":"views.terms"},
-          {"name":"Privacy","route":"views.privacy"},
-          ] %}
           {% for nav_link in nav_links %}
           {% if nav_title == nav_link.name %}
           <a class="nav-link active text-decoration-underline link-underline-custom link-offset-4">{{nav_link.name}}</a>
@@ -36,6 +38,9 @@
           <a class="nav-link" href="{{url_for(nav_link.route)}}">{{nav_link.name}}</a>
           {% endif %}
           {% endfor %}
+          <a class="nav-link" data-bs-toggle="offcanvas" href="#search-canvas">
+            <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
+          </a>
         </div>
 
         <div class="d-flex align-items-center gap-2">
@@ -61,13 +66,7 @@
         <span class="fw-bold text-light">{{website_info.name}}</span>
       </h1>
       <div class="col-md-8 offset-md-2">
-        <nav class="nav flex-column text-start fs-1">
-          {% set nav_links = [
-          {"name":"Home","route":"views.home"},
-          {"name":"About","route":"views.about"},
-          {"name":"Terms","route":"views.terms"},
-          {"name":"Privacy","route":"views.privacy"},
-          ] %}
+        <nav class="nav flex-column {{'text-start' if session.user}} fs-1">
           {% for nav_link in nav_links %}
           {% if nav_title == nav_link.name %}
           <a class="nav-link active text-custom">{{nav_link.name}}</a>
@@ -89,7 +88,78 @@
     </div>
   </div>
 
+  {% include 'partial/search-canvas.html' %}
+
   {% block page_body %}{% endblock %}
+
+  <footer class="bg-pattern p-xl-4 border-top border-custom border-5">
+    <div class="container py-5">
+      <div class="row row-gap-5">
+        <div class="col-12 col-lg-4">
+          <div class="d-flex align-items-center gap-2 justify-content-center justify-content-lg-start">
+            <img src="{{url_for('static',filename='img/logo-bg-light.png')}}" width="50px">
+            <span class="fw-bold fs-1 text-custom-gradient">{{website_info.name}}</span>
+          </div>
+          <p class="d-flex flex-column my-4 text-secondary align-items-center align-items-lg-start gap-1">
+            <span>123 Aptech Avenue</span>
+            <span>Doha, Qatar</span>
+            <span>(974) 1234 5678</span>
+          </p>
+          <div class="d-flex justify-content-center justify-content-lg-start align-items-center gap-3 fs-3">
+            <a href="//facebook.com" target="_blank" class="link-custom text-decoration-none"><i
+                class="fa-brands fa-facebook fa-fw"></i>
+            </a>
+            <a href="//instagram.com" target="_blank" class="link-custom text-decoration-none">
+              <i class="fa-brands fa-instagram fa-fw"></i>
+            </a>
+            <a href="//twitter.com" target="_blank" class="link-custom text-decoration-none">
+              <i class="fa-brands fa-x-twitter fa-fw"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-8 row row-gap-5 g-0">
+          <div class="col-6 col-md-4 text-center text-lg-start">
+            <h5 class="mb-3">Explore</h5>
+            <div class="nav flex-column gap-3 align-items-center align-items-lg-start">
+              {% for nav_link in nav_links %}
+              <a class="nav-link p-0 link-secondary" href="{{url_for(nav_link.route)}}">{{nav_link.name}}</a>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-6 col-md-4 text-center text-lg-start">
+            <h5 class="mb-3">{{'My' if session.user else 'Your'}} Account</h5>
+            <div class="nav flex-column gap-3 align-items-center align-items-lg-start">
+              {% if session.user %}
+              <a class="nav-link p-0 link-secondary" href="">Bookmarks</a>
+              <a class="nav-link p-0 link-secondary" href="">Settings</a>
+              {% else %}
+              <a class="nav-link p-0 link-secondary" href="{{url_for('auth.login')}}">Login</a>
+              <a class="nav-link p-0 link-secondary" href="{{url_for('auth.register')}}">Register</a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="offset-3 offset-md-0 col-6 col-md-4 text-center text-lg-start">
+            <h5 class="mb-3">Legal</h5>
+            <div class="nav flex-column gap-3 align-items-center align-items-lg-start">
+              <a class="nav-link p-0 link-secondary" href="{{url_for('views.terms')}}">Terms of Service</a>
+              <a class="nav-link p-0 link-secondary" href="{{url_for('views.privacy')}}">Privacy Policy</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <footer class="bg-dark text-secondary small">
+    <div
+      class="container py-4 d-flex flex-column flex-lg-row align-items-center justify-content-between text-center gap-3">
+      <span>E-Library &copy; 2023. All rights reserved. Designed by Amaan Al Mir</span>
+      <a href="//almir.info" target="_blank"
+        class="opacity-75 link-custom link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">almir.info</a>
+    </div>
+  </footer>
 </div>
 
 {% include 'partial/email-verification-warning.html' %}

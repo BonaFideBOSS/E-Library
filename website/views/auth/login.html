@@ -61,7 +61,7 @@
 
         <p class="mt-4 mb-0">
           <span class="opacity-75">Forgot your password?</span>
-          <a href="" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+          <a href="{{url_for('auth.forgot_password')}}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
             Reset password
           </a>
         </p>
@@ -69,7 +69,7 @@
     </div>
 
     <div class="col d-none d-lg-block">
-      <img src="{{url_for('static',filename='img/auth.jpg')}}" class="img-fluid">
+      <img src="{{url_for('static',filename='img/auth.jpg')}}" class="img-fluid w-100">
     </div>
   </div>
 </main>

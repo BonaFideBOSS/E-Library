@@ -2,13 +2,49 @@
 {% set page_title = 'Home' %}
 {% set nav_title = 'Home' %}
 
-{% block page_style %}{% endblock %}
+{% block page_style %}
+<link rel="stylesheet" href="{{url_for('static',filename='custom/css/home.css')}}">
+{% endblock %}
 
 {% block page_body %}
 
-<div class="bg-pattern py-5 text-center text-lg-start">
-  <div class="container py-5">
+<div class="bg-pattern bg-hero py-5 text-center text-xl-start">
+  <div class="bg-overlay"></div>
+  <div class="container py-5 text-light overflow-hidden">
     <h1 class="display-1 fw-bold">{{website_info.description}}</h1>
+  </div>
+</div>
+
+<div class="row g-0 text-bg-dark" data-bs-theme="dark">
+  <div class="col-12 col-md-8">
+    <div class="container p-4 p-md-5 d-flex flex-column justify-content-center h-100">
+      <form action="">
+        <div class="input-group border-bottom border-secondary">
+          <div class="form-floating">
+            <input name="query" id="query" type="text"
+              class="form-control form-control-lg border-0 rounded-0 bg-transparent ps-1" placeholder="">
+            <label for="query" class="ps-0">Search</label>
+          </div>
+          <span class="text-secondary input-group-text border-0 rounded-0 bg-transparent">
+            <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4 bg-pattern" style="background-position: center;">
+    <div class="container p-4 p-md-0 d-flex justify-content-center align-items-center gap-3 fs-1 h-100">
+      <a href="//facebook.com" target="_blank" class="link-custom text-decoration-none"><i
+          class="fa-brands fa-facebook fa-fw"></i>
+      </a>
+      <a href="//instagram.com" target="_blank" class="link-custom text-decoration-none">
+        <i class="fa-brands fa-instagram fa-fw"></i>
+      </a>
+      <a href="//twitter.com" target="_blank" class="link-custom text-decoration-none">
+        <i class="fa-brands fa-x-twitter fa-fw"></i>
+      </a>
+    </div>
   </div>
 </div>
 
