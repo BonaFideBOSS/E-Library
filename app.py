@@ -13,10 +13,10 @@ def get_website_name():
     return dict(website_info=app.config["WEBSITE_INFO"])
 
 
-# # ===== Error Handling =====
-# @app.errorhandler(Exception)
-# def page_not_found(e):
-#     return render_template("404.html"), 404
+# ===== Error Handling =====
+@app.errorhandler(Exception)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
 
 # ===== CSRF Error Handling =====

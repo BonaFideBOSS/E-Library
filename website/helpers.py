@@ -26,10 +26,10 @@ def generate_token(count: int = 32):
 
 
 def upload_image_to_cloud(image: FileStorage, name: str):
-    API_KEY = app.config["IMGBB_API"]
-    URL = "https://api.imgbb.com/1/upload"
     image_url = None
     try:
+        API_KEY = app.config["IMGBB_API"]
+        URL = "https://api.imgbb.com/1/upload"
         image = base64.b64encode(image.read())
         data = {"key": API_KEY, "image": image, "name": name}
         response = requests.post(URL, data).json()
