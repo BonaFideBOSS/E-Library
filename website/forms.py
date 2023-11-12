@@ -1,6 +1,8 @@
+from flask import session
 from . import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, PasswordField, HiddenField
+from flask_wtf.file import FileField, FileAllowed, FileSize
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 from .helpers import encrypt_message
 from bson import ObjectId
@@ -109,6 +111,62 @@ class ResetPassword(FlaskForm):
             return False
 
         return True
+
+
+class AccountForm(FlaskForm):
+    user_id = HiddenField()
+    max_file_size = 5  # in MB
+    supported_filetypes = [
+        "jpg",
+        "png",
+        "jpeg",
+        "webp",
+        "gif",
+        "jfif",
+        "avif",
+        "bmp",
+        "ico",
+    ]
+
+    avatar = FileField(
+        "Avatar",
+        validators=[
+            FileAllowed(
+                upload_set=supported_filetypes, message="Only image files are accepted."
+            ),
+            FileSize(
+                max_size=max_file_size * 1024 * 1024,
+                message=f"File size is too large. Max allowed: {max_file_size} MB",
+            ),
+        ],
+    )
+    username = StringField(
+        "Username",
+        validators=[
+            DataRequired(message="Username cannot be left blank."),
+            Length(min=4, max=26, message="Username must be 4 to 26 characters long."),
+        ],
+    )
+    email = EmailField(
+        "Email",
+        validators=[
+            DataRequired(message="Email cannot be left blank."),
+            Email(message="Please enter a valid email address."),
+        ],
+    )
+    password = PasswordField(
+        "Password",
+        validators=[
+            Length(min=8, message="Password must be at least 8 characters long.")
+        ],
+    )
+
+    def validate_email(self, email):
+        user = db.Users.find_one(
+            {"_id": {"$ne": self.user_id.data}, "email": email.data}
+        )
+        if user:
+            raise ValidationError("This email is already is use.")
 
 
 def get_user_by_email(email: str):

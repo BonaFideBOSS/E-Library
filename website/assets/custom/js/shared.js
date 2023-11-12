@@ -41,14 +41,14 @@ function notify(message, delay = 10) {
 
 // Disable submit button on form submission
 $('form').on('submit', function () {
-  const loader = `<span class="spinner-grow spinner-grow-sm opacity-50"></span><span role="status">Loading...</span>`
+  const loader = `<div class="d-flex justify-content-center align-items-center gap-2">
+      <span class="spinner-grow spinner-grow-sm opacity-50"></span>
+      <span role="status">Loading...</span>
+    </div>`
   const btn = $(this).find('button[type="submit"]')
   if (this.checkValidity()) {
     $(btn).attr('disabled', true)
-    if ($(btn).attr('data-show-loader') != 'false') {
-      $(btn).addClass('d-flex justify-content-center align-items-center gap-2 mx-auto')
-      $(btn).html(loader)
-    }
+    if ($(btn).attr('data-show-loader') != 'false') { $(btn).html(loader) }
   }
 })
 
@@ -72,4 +72,20 @@ $('.resend-otp').on('click', function (e) {
   e.preventDefault()
   $.post($(this).data('url'))
   notify('Email sent!')
+})
+
+function previewFile(fileInput, img_class) {
+  for (const file of fileInput.files) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      if (file.type.startsWith('image/')) { $(`.${img_class}`).attr('src', e.target.result) }
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+$('input[type="file"]').on('change', function () {
+  if ($(this).data('show-preview')) {
+    previewFile(this, $(this).data('preview-class'))
+  }
 })

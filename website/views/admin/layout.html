@@ -1,0 +1,27 @@
+{% extends '_shared.html' %}
+
+{% block shared_style %}
+<link rel="stylesheet" href="{{url_for('static',filename='custom/css/admin.css')}}">
+{% block page_style %}{% endblock %}
+{% endblock %}
+
+{% set nav_links = [
+{"name":"Home","route":"views.home"},
+{"name":"Categories","route":"views.categories"},
+{"name":"Books","route":"views.books"},
+{"name":"About","route":"views.about"},
+{"name":"Contact","route":"views.contact"},
+] %}
+
+{% block shared_body %}
+<h1>Administration</h1>
+
+{% block page_body %}{% endblock %}
+</div>
+
+
+{% endblock %}
+
+{% block shared_script %}
+{% block page_script %}{% endblock %}
+{% endblock %}

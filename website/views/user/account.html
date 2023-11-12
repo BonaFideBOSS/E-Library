@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+{% set page_title = 'My Account' %}
+{% set nav_title = 'Account' %}
+
+{% block page_style %}{% endblock %}
+
+{% block page_body %}
+
+<div class="bg-pattern py-5 text-center text-xl-start">
+  <div class="container py-5">
+    <h1 class="display-1 fw-bold">My Account</h1>
+  </div>
+</div>
+
+<div class="container my-5">
+
+  <h3 class="mb-5 d-flex flex-column flex-lg-row gap-3 align-items-center">
+    <i class="fa-sharp fa-solid fa-user fa-fw"></i>
+    <span>Account Details</span>
+  </h3>
+
+  <div class="row row-gap-4">
+    <div class="col-12 col-lg-2 text-center">
+      <img src="{{session.user.avatar}}" class="user-avatar rounded-0" width="150px" height="150px">
+    </div>
+
+    <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-0">
+      <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-4">
+
+        {{form.csrf_token()}}
+
+        <div>
+          <label for="avatar" class="form-label text-secondary small">Avatar</label>
+          {{form.avatar(accept="image/*", class="form-control
+          rounded-0", data_show_preview="true", data_preview_class="user-avatar")}}
+        </div>
+
+        <div class="form-floating">
+          {{form.username(value=session.user.username,class="form-control rounded-0",placeholder="")}}
+          <label for="username">Username</label>
+        </div>
+
+        <div class="form-floating">
+          {{form.email(value=session.user.email,class="form-control rounded-0",placeholder="")}}
+          <label for="email">Email</label>
+        </div>
+
+        <div>
+          <div class="form-floating">
+            {{form.password(class="form-control rounded-0",placeholder="")}}
+            <label for="password">Password</label>
+          </div>
+          <span class="small text-secondary">Leave this blank if you do not wish to change your password.</span>
+        </div>
+
+        <div class="text-center text-lg-start">
+          <button type="submit" class="btn btn-lg btn-custom rounded-0">Save changes</button>
+        </div>
+
+        <p class="my-0 text-secondary small text-center text-lg-start">
+          By submitting this form, I accept the <a href="{{url_for('views.terms')}}"
+            class="link-custom link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Terms of
+            Service</a> and <a href="{{url_for('views.privacy')}}"
+            class="link-custom link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Privacy
+            Policy</a>
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <h3 class="mb-5 d-flex flex-column flex-lg-row gap-3 align-items-center">
+    <i class="fa-sharp fa-solid fa-trash fa-fw"></i>
+    <span>Account Deletion</span>
+  </h3>
+
+  <div class="text-center text-lg-start">
+    <button type="button" class="btn btn-lg btn-danger rounded-0" data-bs-toggle="modal"
+      data-bs-target="#delete-account-modal">
+      Delete Account
+    </button>
+  </div>
+</div>
+
+<div class="modal fade" id="delete-account-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-0 border-0 shadow">
+      <div class="modal-body p-4 text-center">
+        <h3 class="fw-semibold text-danger">Account Deletion</h3>
+        <p class="fs-5 mb-0 fw-medium opacity-75">Are you sure you want to permanently delete your account?</p>
+      </div>
+      <form action="{{url_for('user.delete_account')}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input value="{{csrf_token()}}" hidden>
+        <div class="modal-footer flex-nowrap p-0">
+          <button type="submit"
+            class="btn btn-lg btn-danger text-decoration-none col-6 py-3 m-0 rounded-0 border-0">Delete</button>
+          <button type="button" class="btn btn-lg text-decoration-none col-6 py-3 m-0 rounded-0 border-0"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block page_script %}
+{% for field in form %}
+{% if field.errors %}
+{% for error in field.errors %}
+<script>notify("{{error}}")</script>
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endblock %}

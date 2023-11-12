@@ -6,15 +6,18 @@
                 My Account
             </button>
         </h2>
-        <div id="user-pages" class="accordion-collapse collapse" data-bs-parent="#user-nav-mobile">
+        <div id="user-pages" class="accordion-collapse collapse"
+            data-bs-parent="#user-nav-mobile">
             <div class="accordion-body py-0">
                 <nav class="nav flex-column text-start fs-3">
-                    <a class="nav-link link-secondary" href="#">
+                    <a class="nav-link {{'link-custom' if nav_title=='Bookmarks' else 'link-secondary'}}"
+                        href="{{url_for('user.bookmarks')}}">
                         <i class="fa-sharp fa-solid fa-bookmark me-2 fa-fw"></i>
                         <span>My Bookmarks</span>
                     </a>
 
-                    <a class="nav-link link-secondary" href="#">
+                    <a class="nav-link {{'link-custom' if nav_title=='Account' else 'link-secondary'}}"
+                        href="{{url_for('user.account')}}">
                         <i class="fa-sharp fa-solid fa-user me-2 fa-fw"></i>
                         <span>Account</span>
                     </a>

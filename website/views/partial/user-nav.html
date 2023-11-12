@@ -5,12 +5,13 @@
   </button>
 
   <div class="dropdown-menu dropdown-menu-end rounded-0 mt-2 p-3">
-    <a class="dropdown-item mb-2 py-2 mx-auto" href="#">
+    <a class="dropdown-item mb-2 py-2 mx-auto {{'active' if nav_title=='Bookmarks'}}"
+      href="{{url_for('user.bookmarks')}}">
       <i class="fa-sharp fa-solid fa-bookmark fa-fw me-2"></i>
       <span>My Bookmarks</span>
     </a>
 
-    <a class="dropdown-item mb-2 py-2 mx-auto" href="#">
+    <a class="dropdown-item mb-2 py-2 mx-auto {{'active' if nav_title=='Account'}}" href="{{url_for('user.account')}}">
       <i class="fa-sharp fa-solid fa-user fa-fw me-2"></i>
       <span>Account</span>
     </a>

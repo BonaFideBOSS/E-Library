@@ -8,6 +8,7 @@ from .mailer import send_email_verification_mail, send_password_reset_mail
 
 db = db.db
 auth = Blueprint("auth", __name__)
+DEFAULT_AVATAR = "/assets/img/user.jpg"
 
 
 @auth.before_request
@@ -32,7 +33,7 @@ def register():
         user["password"] = encrypt_message(user["password"])
         user["created_on"] = datetime.utcnow()
         user["verified"] = False
-        user["avatar"] = "/assets/img/user.jpg"
+        user["avatar"] = DEFAULT_AVATAR
         db.Users.insert_one(user)
         send_email_verification_mail(user["email"])
         add_user_to_session(user)

@@ -1,5 +1,7 @@
 Flask
 Flask-Pymongo
 Flask-WTF
+Flask-Reuploaded
 email-validator
 Flask-Mail
+requests
