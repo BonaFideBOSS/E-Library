@@ -26,32 +26,30 @@
 
     <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-0">
       <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-4">
-
         {{form.csrf_token()}}
-
+        {% set field_icons = {'avatar':'image', 'username': 'user', 'email': 'envelope', 'password': 'lock'} %}
+        {% for field in form if field.name not in ['csrf_token','user_id'] %}
         <div>
-          <label for="avatar" class="form-label text-secondary small">Avatar</label>
-          {{form.avatar(accept="image/*", class="form-control
-          rounded-0", data_show_preview="true", data_preview_class="user-avatar")}}
-        </div>
-
-        <div class="form-floating">
-          {{form.username(value=session.user.username,class="form-control rounded-0",placeholder="")}}
-          <label for="username">Username</label>
-        </div>
-
-        <div class="form-floating">
-          {{form.email(value=session.user.email,class="form-control rounded-0",placeholder="")}}
-          <label for="email">Email</label>
-        </div>
-
-        <div>
-          <div class="form-floating">
-            {{form.password(class="form-control rounded-0",placeholder="")}}
-            <label for="password">Password</label>
+          <div class="input-group input-group-lg">
+            <span class="text-secondary input-group-text rounded-0">
+              <i class="fa-sharp fa-regular fa-{{field_icons.get(field.name)}} fa-fw"></i>
+            </span>
+            {% if field.name == 'avatar' %}
+            {{form.avatar(accept="image/*", class="text-secondary form-control rounded-0 fs-6",
+            data_show_preview="true",
+            data_preview_class="user-avatar")}}
+            {% else %}
+            <div class="form-floating">
+              {{field(value=session.user[field.name],class="form-control rounded-0", placeholder="")}}
+              {{field.label}}
+            </div>
+            {% endif %}
           </div>
+          {% if field.name == 'password' %}
           <span class="small text-secondary">Leave this blank if you do not wish to change your password.</span>
+          {% endif %}
         </div>
+        {% endfor %}
 
         <div class="text-center text-lg-start">
           <button type="submit" class="btn btn-lg btn-custom rounded-0">Save changes</button>
@@ -64,7 +62,6 @@
             class="link-custom link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Privacy
             Policy</a>
         </p>
-
       </form>
     </div>
   </div>

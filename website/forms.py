@@ -126,6 +126,7 @@ class AccountForm(FlaskForm):
         "avif",
         "bmp",
         "ico",
+        "heic",
     ]
 
     avatar = FileField(

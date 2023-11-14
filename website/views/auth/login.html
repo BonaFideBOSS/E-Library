@@ -24,27 +24,18 @@
         <form method="post">
           {{form.csrf_token}}
 
-          <!-- Email -->
-          <div class="input-group input-group-lg mb-4 border-bottom border-secondary">
-            <div class="form-floating">
-              {{form.email(class="form-control border-0 rounded-0 bg-transparent ps-1", placeholder="")}}
-              <label for="email" class="ps-0">Email</label>
-            </div>
-            <span class="text-secondary input-group-text border-0 rounded-0 bg-transparent">
-              <i class="fa-sharp fa-regular fa-envelope"></i>
-            </span>
-          </div>
-
-          <!-- Password -->
+          {% set field_icons = {'email': 'envelope', 'password': 'lock'} %}
+          {% for field in form if field.name != 'csrf_token' %}
           <div class="input-group input-group-lg border-bottom border-secondary mb-4">
             <div class="form-floating">
-              {{form.password(class="form-control border-0 rounded-0 bg-transparent ps-1", placeholder="")}}
-              <label for="password" class="ps-0">Password</label>
+              {{field(class="form-control border-0 rounded-0 bg-transparent ps-1", placeholder="")}}
+              {{field.label(class="ps-0")}}
             </div>
             <span class="text-secondary input-group-text border-0 rounded-0 bg-transparent">
-              <i class="fa-sharp fa-regular fa-lock"></i>
+              <i class="fa-sharp fa-regular fa-{{field_icons.get(field.name)}}"></i>
             </span>
           </div>
+          {% endfor %}
 
           <!-- Remember Me -->
           <div class="form-check mb-4 text-start">
@@ -61,14 +52,15 @@
 
         <p class="mt-4 mb-0">
           <span class="opacity-75">Forgot your password?</span>
-          <a href="{{url_for('auth.forgot_password')}}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+          <a href="{{url_for('auth.forgot_password')}}"
+            class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
             Reset password
           </a>
         </p>
       </div>
     </div>
 
-    <div class="col d-none d-lg-block">
+    <div class="col-lg-8 d-none d-lg-block">
       <img src="{{url_for('static',filename='img/auth.jpg')}}" class="img-fluid w-100">
     </div>
   </div>

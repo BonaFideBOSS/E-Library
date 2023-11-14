@@ -33,42 +33,39 @@ def bookmarks():
 def account():
     form = AccountForm()
     user = session["user"]
-    form.user_id.data = ObjectId(user["_id"])
 
-    try:
-        if form.is_submitted():
-            if not form.password.data:
-                form.password.data = session["user"]["password"]
+    if form.is_submitted():
+        form.user_id.data = ObjectId(user["_id"])
+        if not form.password.data:
+            form.password.data = session["user"]["password"]
 
-        if form.validate_on_submit():
-            data = form.data
-            data.pop("csrf_token")
-            data.pop("user_id")
+    if form.validate_on_submit():
+        data = form.data
+        data.pop("csrf_token")
+        data.pop("user_id")
 
-            if data["email"] != user["email"]:
-                data["verified"] = False
+        if data["email"] != user["email"]:
+            data["verified"] = False
 
-            if data["password"] != user["password"]:
-                data["password"] = encrypt_message(data["password"])
+        if data["password"] != user["password"]:
+            data["password"] = encrypt_message(data["password"])
 
-            if data["avatar"]:
-                avatar_url = upload_image_to_cloud(data["avatar"], form.username.data)
-                data["avatar"] = avatar_url if avatar_url else user["avatar"]
-            else:
-                data["avatar"] = user["avatar"]
+        if data["avatar"]:
+            avatar_url = upload_image_to_cloud(data["avatar"], form.username.data)
+            data["avatar"] = avatar_url if avatar_url else user["avatar"]
+        else:
+            data["avatar"] = user["avatar"]
 
-            data["updated_on"] = datetime.utcnow()
-            user = db.Users.find_one_and_update(
-                {"_id": ObjectId(user["_id"])},
-                {"$set": data},
-                return_document=True,
-            )
-            add_user_to_session(user)
-            if not user["verified"]:
-                send_email_verification_mail(user["email"])
-            flash("Successfully updated account details.")
-    except:
-        flash("Failed to updated account details.")
+        data["updated_on"] = datetime.utcnow()
+        user = db.Users.find_one_and_update(
+            {"_id": ObjectId(user["_id"])},
+            {"$set": data},
+            return_document=True,
+        )
+        add_user_to_session(user)
+        if not user["verified"]:
+            send_email_verification_mail(user["email"])
+        flash("Successfully updated account details.")
 
     return render_template("user/account.html", form=form)
 

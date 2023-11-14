@@ -1,13 +1,15 @@
 {% extends '_shared.html' %}
 
 {% block shared_style %}
+<link rel="stylesheet" href="{{url_for('static',filename='custom/css/layout.css')}}">
 {% block page_style %}{% endblock %}
 {% endblock %}
 
 {% set nav_links = [
 {"name":"Home","route":"views.home"},
 {"name":"Categories","route":"views.categories"},
-{"name":"Books","route":"views.books"},
+{"name":"<li class='active'>Books</li>
+<li>Videos</li><span>ㅤ ㅤㅤ</span>","route":"views.books"},
 {"name":"About","route":"views.about"},
 {"name":"Contact","route":"views.contact"},
 ] %}
@@ -32,12 +34,18 @@
       <div class="collapse navbar-collapse gap-3 me-3" id="navbarNavAltMarkup">
         <div class="ms-auto navbar-nav gap-3">
           {% for nav_link in nav_links %}
-          {% if nav_title == nav_link.name %}
-          <a class="nav-link active text-decoration-underline link-underline-custom link-offset-4">{{nav_link.name}}</a>
+          {% if nav_title in nav_link.name %}
+          <a
+            class="nav-link active text-decoration-underline link-underline-custom link-offset-4 {{'nav-books' if 'books' in nav_link.route}}">
+            {{nav_link.name|safe}}
+          </a>
           {% else %}
-          <a class="nav-link" href="{{url_for(nav_link.route)}}">{{nav_link.name}}</a>
+          <a class="nav-link {{'nav-books' if 'books' in nav_link.route}}" href="{{url_for(nav_link.route)}}">
+            {{nav_link.name|safe}}
+          </a>
           {% endif %}
           {% endfor %}
+
           <a class="nav-link" data-bs-toggle="offcanvas" href="#search-canvas">
             <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
           </a>
@@ -70,10 +78,15 @@
       <div class="col-md-8 offset-md-2">
         <nav class="nav flex-column {{'text-start' if session.user}} fs-1">
           {% for nav_link in nav_links %}
-          {% if nav_title == nav_link.name %}
-          <a class="nav-link active text-custom">{{nav_link.name}}</a>
+          {% if nav_title in nav_link.name %}
+          <a class="nav-link active text-custom {{'nav-books' if 'books' in nav_link.route}}">
+            {{nav_link.name|safe}}
+          </a>
           {% else %}
-          <a class="nav-link link-secondary" href="{{url_for(nav_link.route)}}">{{nav_link.name}}</a>
+          <a class="nav-link link-secondary {{'nav-books' if 'books' in nav_link.route}}"
+            href="{{url_for(nav_link.route)}}">
+            {{nav_link.name|safe}}
+          </a>
           {% endif %}
           {% endfor %}
         </nav>
@@ -125,7 +138,9 @@
             <h5 class="mb-3">Explore</h5>
             <div class="nav flex-column gap-3 align-items-center align-items-lg-start">
               {% for nav_link in nav_links %}
-              <a class="nav-link p-0 link-secondary" href="{{url_for(nav_link.route)}}">{{nav_link.name}}</a>
+              <a class="nav-link p-0 link-secondary" href="{{url_for(nav_link.route)}}">
+                {{'Books' if 'books' in nav_link.route else nav_link.name}}
+              </a>
               {% endfor %}
             </div>
           </div>
@@ -171,5 +186,6 @@
 {% endblock %}
 
 {% block shared_script %}
+<script src="{{url_for('static',filename='custom/js/layout.js')}}"></script>
 {% block page_script %}{% endblock %}
 {% endblock %}
