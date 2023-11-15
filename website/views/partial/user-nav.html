@@ -5,6 +5,16 @@
   </button>
 
   <div class="dropdown-menu dropdown-menu-end rounded-0 mt-2 p-3">
+    {% if session.user.roles %}
+    {% if 'admin' in session.user.roles %}
+    <a class="dropdown-item mb-2 py-2 mx-auto {{'active' if 'admin' in request.endpoint}}"
+      href="{{url_for('admin.dashboard')}}">
+      <i class="fa-sharp fa-solid fa-grid-2 fa-fw me-2"></i>
+      <span>Administator</span>
+    </a>
+    {% endif %}
+    {% endif %}
+
     <a class="dropdown-item mb-2 py-2 mx-auto {{'active' if nav_title=='Bookmarks'}}"
       href="{{url_for('user.bookmarks')}}">
       <i class="fa-sharp fa-solid fa-bookmark fa-fw me-2"></i>

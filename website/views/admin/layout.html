@@ -1,27 +1,87 @@
 {% extends '_shared.html' %}
 
 {% block shared_style %}
+<link rel="stylesheet" href="{{url_for('static',filename='datatables/datatables.css')}}">
 <link rel="stylesheet" href="{{url_for('static',filename='custom/css/admin.css')}}">
 {% block page_style %}{% endblock %}
 {% endblock %}
 
 {% set nav_links = [
-{"name":"Home","route":"views.home"},
-{"name":"Categories","route":"views.categories"},
-{"name":"Books","route":"views.books"},
-{"name":"About","route":"views.about"},
-{"name":"Contact","route":"views.contact"},
+{"name":"Home", "route":"views.home", "icon":"house"},
+{"name":"Dashboard", "route":"admin.dashboard", "icon":"grid-2"},
+{"name":"Categories", "route":"admin.categories", "icon":"tag"},
+{"name":"Books", "route":"admin.books", "icon":"books"},
+{"name":"Users", "route":"admin.users", "icon":"users"},
 ] %}
 
 {% block shared_body %}
-<h1>Administration</h1>
+<div id="admin-body">
+  <nav class="navbar navbar-expand-xl bg-dark" data-bs-theme="dark">
+    <div class="container-fluid row g-0">
 
-{% block page_body %}{% endblock %}
+      <div class="col-2 d-xl-none text-center fs-3" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#nav-mobile">
+        <i class="fa-sharp fa-solid fa-bars"></i>
+      </div>
+
+      <div id="aside-collapse" class="col-2 d-none d-xl-block col-lg-1 text-center text-secondary fs-3" type="button">
+        <i class="fa-sharp fa-solid fa-bars"></i>
+      </div>
+
+      <div class="col-10">
+        <a class="navbar-brand m-0 d-flex justify-content-start justify-content-lg-center align-items-center gap-2"
+          href="{{url_for('admin.dashboard')}}">
+          <span class="fs-3 text-truncate">
+            <span class="fw-bold">{{website_info.name}}</span>
+            <span class="text-custom">Administator</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="col-xl-1 d-none d-lg-block">
+        <div class="collapse navbar-collapse">
+          <div class="mx-auto">
+            {% include 'partial/user-nav.html' %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <aside class="bg-dark d-none d-lg-block overflow-y-auto collapsed">
+    <div class="container py-4">
+      <nav class="nav nav-pills nav-justified flex-column gap-3 fs-5">
+        {% for link in nav_links %}
+        {% if nav_title == link.name %}
+        <a class="nav-link active text-nowrap w-100">
+          <i class="fa-sharp fa-solid fa-{{link.icon}} fa-fw"></i>
+          <span class="link-title ms-2">{{link.name}}</span>
+        </a>
+        {% else %}
+        <a class="nav-link text-nowrap text-secondary w-100" href="{{url_for(link.route)}}">
+          <i class="fa-sharp fa-solid fa-{{link.icon}} fa-fw"></i>
+          <span class="link-title ms-2">{{link.name}}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+      </nav>
+    </div>
+  </aside>
+
+  <main class="overflow-y-auto">
+    <div class="container py-5">
+      {% block page_body %}{% endblock %}
+    </div>
+  </main>
 </div>
 
 
 {% endblock %}
 
 {% block shared_script %}
+<script src="{{url_for('static',filename='datatables/datatables.js')}}"></script>
+<script src="{{url_for('static',filename='custom/js/admin.js')}}"></script>
+
 {% block page_script %}{% endblock %}
 {% endblock %}

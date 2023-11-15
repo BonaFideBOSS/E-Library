@@ -35,10 +35,10 @@
 }
 
 .btn-dark {
-  --bs-btn-bg: #var(--color-darker);
-  --bs-btn-border-color: #var(--color-darker);
-  --bs-btn-disabled-bg: #var(--color-darker);
-  --bs-btn-disabled-border-color: #var(--color-darker);
+  --bs-btn-bg: var(--color-darker);
+  --bs-btn-border-color: var(--color-darker);
+  --bs-btn-disabled-bg: var(--color-darker);
+  --bs-btn-disabled-border-color: var(--color-darker);
 }
 
 .text-custom {

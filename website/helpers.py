@@ -5,6 +5,19 @@ import secrets
 import requests
 import base64
 from flask_wtf.file import FileStorage
+from bson import ObjectId
+
+
+def db_searcher(field: str, string: str):
+    query = {"$and": [{field: {"$regex": i, "$options": "i"}} for i in string.split()]}
+    if field == "_id":
+        query = {"_id": ObjectId(string)}
+    if string.lower() in ["true", "false"]:
+        string = bool(string)
+        query = {field: string}
+    if string.lower() == "exists":
+        query = {field: {"$exists": True}}
+    return query
 
 
 # Function to encrypt a message using MD5 Hash algorithm

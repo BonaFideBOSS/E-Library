@@ -1,0 +1,83 @@
+{% extends 'admin/layout.html' %}
+{% set page_title = 'Users' %}
+{% set nav_title = 'Users' %}
+
+{% block page_style %}{% endblock %}
+
+{% block page_body %}
+
+<h1 class="fw-bold text-center text-md-start">
+  <i class="fa-sharp fa-solid fa-users fa-fw me-2"></i>
+  <span>{{page_title}}</span>
+</h1>
+<hr>
+
+<table class="table align-middle">
+  <thead class="opacity-75">
+    <tr>
+      <th></th>
+      <th>Id</th>
+      <th>Email</th>
+      <th>Username</th>
+      <th>Verified</th>
+      <th>Created On</th>
+      <th></th>
+    </tr>
+  </thead>
+</table>
+
+{% endblock %}
+
+{% block page_script %}
+<script>
+  const format_date = (date) => (new Date(date)).toLocaleString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
+
+  new DataTable('.table', {
+    ajax: {
+      url: "{{url_for('admin.get_users')}}", type: "POST", dataFilter: function (data) {
+        var json = $.parseJSON(data)
+        return JSON.stringify(json)
+      }
+    },
+    processing: true,
+    serverSide: true,
+    responsive: true,
+    search: { return: true },
+    dom: "rftip",
+    columnDefs: [{ targets: [0, 2, -1], className: 'all' }, { targets: [0, -1], orderable: false, }],
+    order: [[5, 'desc']],
+    "pageLength": 5,
+    columns: [
+      {
+        data: "avatar", render: function (data) {
+          return `<img src="${data}" class="user-avatar" width="40px" height="40px">`
+        }
+      },
+      { data: "_id.$oid" },
+      { data: "email" },
+      { data: "username" },
+      { data: "verified" },
+      {
+        data: "created_on.$date", render: function (data) {
+          return format_date(data)
+        }
+      },
+      {
+        data: "_id.$oid", render: function (data) {
+          return `<a href="" class="btn btn-dark"><i class="fa-sharp fa-solid fa-gear fa-fw"></i></a>`
+        }
+      }
+    ],
+    drawCallback: function (settings) {
+      console.log(settings)
+    },
+  });
+</script>
+{% endblock %}
