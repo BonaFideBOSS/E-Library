@@ -29,10 +29,6 @@ main {
   grid-area: Body;
 }
 
-#aside-collapse:hover {
-  color: var(--bs-light) !important;
-}
-
 aside.collapsed {
   width: 100px;
 }
@@ -59,4 +55,25 @@ aside.collapsed .link-title {
 .table th,
 .table td {
   white-space: nowrap;
+}
+
+div.dataTables_processing>div:last-child>div {
+  background: var(--color-custom) !important;
+}
+
+.dataTables_filter {
+  margin-bottom: 1rem;
+}
+
+.dataTables_filter input {
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+.dataTables_filter input::-webkit-search-cancel-button {
+  display: none;
+}
+
+div.dataTables_processing {
+  margin-top: 0 !important;
 }

@@ -56,7 +56,6 @@ def account():
         else:
             data["avatar"] = user["avatar"]
 
-        data["updated_on"] = datetime.utcnow()
         user = db.Users.find_one_and_update(
             {"_id": ObjectId(user["_id"])},
             {"$set": data},

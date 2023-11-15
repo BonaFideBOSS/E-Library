@@ -113,12 +113,7 @@ def reset_password():
     if form.validate_on_submit():
         db.Users.find_one_and_update(
             {"_id": ObjectId(user_id), "token": token},
-            {
-                "$set": {
-                    "password": encrypt_message(form.password.data),
-                    "updated_on": datetime.utcnow(),
-                }
-            },
+            {"$set": {"password": encrypt_message(form.password.data)}},
         )
         flash("Your password has been successfully updated.")
         return redirect(url_for("auth.login"))

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for, flash
 from . import db
 from .helpers import db_searcher
-from bson import json_util
+from bson import json_util, ObjectId
 
 db = db.db
 admin = Blueprint("admin", __name__)
@@ -45,13 +45,25 @@ def users():
     return render_template("admin/users.html")
 
 
+@admin.route("/users/manage/<user_id>", methods=["GET", "POST"])
+def manager_user(user_id):
+    user = db.Users.find_one({"_id": ObjectId(user_id)})
+    return render_template("admin/manage-user.html", user=user)
+
+
 @admin.route("/users", methods=["POST"])
 def get_users():
     params = search_params("email")
-    total_records = db.Users.count_documents({})
-    filtered_records = db.Users.count_documents({})
+    data = get_records("Users", params)
+    return data
+
+
+def get_records(collection: str, params: dict):
+    total_records = db[collection].count_documents({})
+    filtered_records = db[collection].count_documents(params["search"])
     records = (
-        db.Users.find(params["search"])
+        db[collection]
+        .find(params["search"])
         .sort(params["order"], params["order_dir"])
         .skip(params["start"])
         .limit(params["length"])

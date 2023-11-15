@@ -1,0 +1,22 @@
+{% extends 'admin/layout.html' %}
+{% set page_title = 'Manage User' %}
+{% set nav_title = 'Users' %}
+
+{% block page_style %}{% endblock %}
+
+{% block page_body %}
+
+<h1 class="fw-bold text-center text-md-start">
+  <i class="fa-sharp fa-solid fa-user-group fa-fw me-2"></i>
+  <span>{{page_title}}</span>
+</h1>
+<hr class="mb-4">
+
+{{user}}
+
+<hr>
+<a href="{{url_for('admin.users')}}" class="btn btn-dark rounded-0">Go back</a>
+
+{% endblock %}
+
+{% block page_script %}{% endblock %}

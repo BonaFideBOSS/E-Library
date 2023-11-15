@@ -11,7 +11,7 @@
 {"name":"Dashboard", "route":"admin.dashboard", "icon":"grid-2"},
 {"name":"Categories", "route":"admin.categories", "icon":"tag"},
 {"name":"Books", "route":"admin.books", "icon":"books"},
-{"name":"Users", "route":"admin.users", "icon":"users"},
+{"name":"Users", "route":"admin.users", "icon":"user-group"},
 ] %}
 
 {% block shared_body %}
@@ -19,17 +19,13 @@
   <nav class="navbar navbar-expand-xl bg-dark" data-bs-theme="dark">
     <div class="container-fluid row g-0">
 
-      <div class="col-2 d-xl-none text-center fs-3" type="button" data-bs-toggle="offcanvas"
+      <div class="col-2 d-xl-none text-center text-secondary fs-3" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#nav-mobile">
         <i class="fa-sharp fa-solid fa-bars"></i>
       </div>
 
-      <div id="aside-collapse" class="col-2 d-none d-xl-block col-lg-1 text-center text-secondary fs-3" type="button">
-        <i class="fa-sharp fa-solid fa-bars"></i>
-      </div>
-
       <div class="col-10">
-        <a class="navbar-brand m-0 d-flex justify-content-start justify-content-lg-center align-items-center gap-2"
+        <a class="navbar-brand m-0 d-flex justify-content-start ps-lg-4 align-items-center gap-2"
           href="{{url_for('admin.dashboard')}}">
           <span class="fs-3 text-truncate">
             <span class="fw-bold">{{website_info.name}}</span>
@@ -52,6 +48,10 @@
   <aside class="bg-dark d-none d-lg-block overflow-y-auto collapsed">
     <div class="container py-4">
       <nav class="nav nav-pills nav-justified flex-column gap-3 fs-5">
+        <a id="aside-collapse" class="nav-link text-nowrap text-secondary w-100" type="button">
+          <i class="fa-sharp fa-solid fa-bars fa-fw"></i>
+          <span class="link-title ms-2">Collapse</span>
+        </a>
         {% for link in nav_links %}
         {% if nav_title == link.name %}
         <a class="nav-link active text-nowrap w-100">
