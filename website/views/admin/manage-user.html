@@ -12,11 +12,69 @@
 </h1>
 <hr class="mb-4">
 
-{{user}}
+<form method="post">
+  {{form.hidden_tag()}}
+  <div class="row row-cols-1 row-cols-md-2 row-gap-3">
+    <div class="col text-center">
+      <img src="{{form.avatar.data}}" class="user-avatar rounded-0 mb-3" width="100px" height="100px">
+    </div>
+    {% set field_icons = {
+    'user_id':'fingerprint',
+    'avatar':'image',
+    'username': 'user',
+    'email': 'envelope',
+    'password': 'lock',
+    'verified':'circle-xmark',
+    'roles':'wrench',
+    } %}
+    {% for field in form if field.type not in ['HiddenField','CSRFTokenField'] %}
+    <div class="col">
+      {{field.label(class="form-label small text-secondary fw-medium")}}
+      <div class="input-group input-group-lg">
+        <span class="input-group-text rounded-0">
+          <i class="fa-sharp fa-regular fa-{{field_icons.get(field.name)}} fa-fw"></i>
+        </span>
+        {% if field.type == 'SelectField' %}
+        {{field(class="form-select rounded-0")}}
+        {% else %}
+        {{field(class="form-control rounded-0")}}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 
-<hr>
-<a href="{{url_for('admin.users')}}" class="btn btn-dark rounded-0">Go back</a>
+  <button type="submit" class="mt-4 btn btn-lg btn-success rounded-0">Save changes</button>
+</form>
+
+<div class="mt-2 d-flex flex-wrap gap-2">
+  <form action="{{url_for('admin.delete_db_record',collection='Users',_id=user._id)}}" method="post">
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+    <button type="submit" class="btn btn-lg btn-outline-danger rounded-0">Delete</button>
+  </form>
+  <a href="{{url_for('admin.users')}}" class="btn btn-lg btn-outline-dark rounded-0">Go back</a>
+</div>
 
 {% endblock %}
 
-{% block page_script %}{% endblock %}
+{% block page_script %}
+<script>
+  function change_verification_icon() {
+    const check_icon = 'fa-circle-check'
+    const x_icon = 'fa-circle-xmark'
+    if ($('select[name="verified"]').val() == 'True') {
+      $(`.${x_icon}`).addClass(check_icon)
+      $(`.${x_icon}`).removeClass(x_icon)
+    } else {
+      $(`.${check_icon}`).addClass(x_icon)
+      $(`.${check_icon}`).removeClass(check_icon)
+    }
+  }
+  change_verification_icon()
+  $('select[name="verified"]').on('change', change_verification_icon)
+
+  $('input[name="avatar"]').on('input', function () {
+    $('form img.user-avatar').attr('src', $(this).val())
+  })
+</script>
+{% endblock %}

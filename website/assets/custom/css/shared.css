@@ -122,6 +122,7 @@
 }
 
 input:focus,
+select:focus,
 .input-group:focus-within {
   border-color: var(--color-custom) !important;
 }

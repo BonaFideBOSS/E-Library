@@ -1,0 +1,75 @@
+{% extends 'admin/layout.html' %}
+{% set page_title = 'Manage Category' if 'Save Changes' in form.submit.label|string else 'New Category' %}
+{% set nav_title = 'Categories' %}
+
+{% block page_style %}{% endblock %}
+
+{% block page_body %}
+
+<h1 class="fw-bold text-center text-md-start">
+  <i class="fa-sharp fa-solid fa-tag fa-fw me-2"></i>
+  <span>{{page_title}}</span>
+</h1>
+<hr class="mb-4">
+
+<form method="post" enctype="multipart/form-data">
+  {{form.hidden_tag()}}
+  <div class="row row-cols-1 row-cols-md-2 row-gap-3">
+    {% set field_icons = {
+    'category_id':'fingerprint',
+    'category':'tag',
+    'icon': 'symbols',
+    'image': 'image',
+    } %}
+    {% for field in form if field.type not in ['HiddenField','CSRFTokenField','SubmitField'] %}
+    <div class="col">
+      {{field.label(class="form-label small text-secondary fw-medium")}}
+      <div class="input-group input-group-lg">
+        <span class="input-group-text rounded-0">
+          <i
+            class="fa-sharp fa-regular fa-{{field_icons.get(field.name)}} fa-fw {{'icon' if field.name == 'icon'}}"></i>
+        </span>
+        {% if field.type == 'FileField' %}
+        {{field(accept="image/*", class="form-control rounded-0", data_show_preview="true",
+        data_preview_class="object-fit-cover")}}
+        {% else %}
+        {{field(class="form-control rounded-0")}}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="col">
+      {% if form.image.data %}
+      <img src="{{form.image.data}}" class="object-fit-cover" width="100px" height="100px">
+      {% else %}
+      <img class="object-fit-cover" width="100px" height="100px">
+      {% endif %}
+    </div>
+  </div>
+
+  {{form.submit(class="mt-4 btn btn-lg btn-success rounded-0")}}
+</form>
+
+<div class="mt-2 d-flex flex-wrap gap-2">
+  {% if 'Save Changes' in form.submit.label|string %}
+  <form action="{{url_for('admin.delete_db_record',collection='Categories',_id=category._id)}}" method="post">
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+    <button type="submit" class="btn btn-lg btn-outline-danger rounded-0">Delete</button>
+  </form>
+  {% endif %}
+  <a href="{{url_for('admin.categories')}}" class="btn btn-lg btn-outline-dark rounded-0">Go back</a>
+</div>
+
+{% endblock %}
+
+{% block page_script %}
+<script>
+  var current_icon = 'symbols'
+  $('input[name="icon"]').on('input', function () {
+    $('.icon').addClass(`fa-${this.value}`)
+    $('.icon').removeClass(`fa-${current_icon}`)
+    current_icon = this.value
+  })
+</script>
+{% endblock %}

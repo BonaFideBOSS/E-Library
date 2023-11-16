@@ -2,13 +2,46 @@
 {% set page_title = 'Categories' %}
 {% set nav_title = 'Categories' %}
 
-{% block page_style %}{% endblock %}
+{% block page_style %}
+<style>
+  .card {
+    overflow: hidden;
+    height: 150px;
+  }
+
+  @media (min-width: 768px) {
+    .card {
+      height: 250px;
+    }
+  }
+
+  .card .card-img-overlay {
+    background: linear-gradient(145deg, #000, transparent);
+  }
+</style>
+{% endblock %}
 
 {% block page_body %}
 
 <div class="bg-pattern py-5 text-center text-xl-start">
   <div class="container py-5">
     <h1 class="display-1 fw-bold">Categories</h1>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 row-gap-4">
+    {% for category in categories %}
+    <div class="col">
+      <a class="card text-bg-dark rounded-0 border-0" href="">
+        <img src="{{category.image}}" class="card-img rounded-0 object-fit-cover h-100">
+        <div class="card-img-overlay">
+          <h4 class="card-title text-custom fw-bold">{{category.category}}</h4>
+          <p class="card-text small">23 Materials</p>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
   </div>
 </div>
 

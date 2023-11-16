@@ -1,4 +1,3 @@
-from flask import session
 from . import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, PasswordField, HiddenField

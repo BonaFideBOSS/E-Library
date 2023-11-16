@@ -2,7 +2,30 @@
 {% set page_title = 'Dashboard' %}
 {% set nav_title = 'Dashboard' %}
 
-{% block page_style %}{% endblock %}
+{% block page_style %}
+
+<style>
+  .card {
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .card-icon {
+    position: absolute;
+    bottom: -25px;
+    right: -25px;
+    opacity: .25;
+  }
+
+  .link-light .card-title {
+    opacity: .75;
+  }
+
+  .link-light:hover .card-title {
+    opacity: 1 !important;
+  }
+</style>
+{% endblock %}
 
 {% block page_body %}
 
@@ -10,7 +33,28 @@
   <i class="fa-sharp fa-solid fa-grid-2 fa-fw me-2"></i>
   <span>{{page_title}}</span>
 </h1>
-<hr>
+<hr class="mb-4">
+
+{% macro dash_card(title, icon) %}
+<div class="col">
+  <a class="card text-decoration-none link-light rounded-0 bg-custom-gradient border-0"
+    href="{{url_for('admin.'+title|lower)}}">
+    <div class="card-body">
+      <h5 class="card-title">{{title}}</h5>
+      <h1 class="card-title display-1 fw-semibold">{{data[title|lower]}}</h1>
+      <div class="card-icon">
+        <i class="fa-sharp fa-solid fa-{{icon}} fa-10x text-dark"></i>
+      </div>
+    </div>
+  </a>
+</div>
+{% endmacro %}
+
+<div class="row row-cols-2 row-cols-md-3 row-gap-4">
+  {{dash_card('Categories','tag')}}
+  {{dash_card('Books','books')}}
+  {{dash_card('Users','user-group')}}
+</div>
 
 {% endblock %}
 

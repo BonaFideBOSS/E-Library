@@ -12,7 +12,8 @@ def home():
 
 @views.route("/categories/")
 def categories():
-    return render_template("categories.html")
+    categories = db.Categories.find({}).sort('category')
+    return render_template("categories.html", categories=categories)
 
 
 @views.route("/books/")

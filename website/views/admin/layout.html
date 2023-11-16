@@ -76,12 +76,53 @@
   </main>
 </div>
 
-
+<div class="offcanvas offcanvas-top bg-dark border-0 h-100" id="nav-mobile" data-bs-theme="dark">
+  <div class="offcanvas-header pe-4 pe-md-5 pt-5">
+    <button type="button" class="bg-transparent border-0 fs-1 ms-auto" data-bs-dismiss="offcanvas">
+      <i class="fa-sharp fa-solid fa-xmark-large"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body text-center pb-5">
+    <h1 class="display-3 d-flex justify-content-center align-items-center gap-2 mb-5">
+      <img src="{{url_for('static',filename='img/logo-light.png')}}" width="50px">
+      <span>
+        <span class="fw-bold text-light">{{website_info.name}}</span>
+        <span class="text-custom">Administator</span>
+      </span>
+    </h1>
+    <div class="col-md-8 offset-md-2">
+      <nav class="nav flex-column {{'text-start' if session.user}} fs-1">
+        {% for nav_link in nav_links %}
+        {% if nav_title in nav_link.name %}
+        <a class="nav-link active text-custom">
+          {{nav_link.name}}
+        </a>
+        {% else %}
+        <a class="nav-link link-secondary" href="{{url_for(nav_link.route)}}">
+          {{nav_link.name}}
+        </a>
+        {% endif %}
+        {% endfor %}
+      </nav>
+      <div class="d-flex {{'flex-column' if session.user else 'mt-5 justify-content-center flex-wrap'}} gap-3">
+        {% include 'partial/user-nav-mobile.html' %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block shared_script %}
 <script src="{{url_for('static',filename='datatables/datatables.js')}}"></script>
 <script src="{{url_for('static',filename='custom/js/admin.js')}}"></script>
+
+{% for field in form %}
+{% if field.errors %}
+{% for error in field.errors %}
+<script>notify("{{error}}")</script>
+{% endfor %}
+{% endif %}
+{% endfor %}
 
 {% block page_script %}{% endblock %}
 {% endblock %}

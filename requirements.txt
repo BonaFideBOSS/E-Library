@@ -1,6 +1,6 @@
-Flask
-Flask-Pymongo
-Flask-WTF
-email-validator
-Flask-Mail
-requests
+Flask==3.0.0
+Flask-Pymongo==2.3.0
+Flask-WTF==1.2.1
+email-validator==2.1.0.post1
+Flask-Mail==0.9.1
+requests==2.31.0
