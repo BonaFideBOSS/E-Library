@@ -12,23 +12,34 @@
   </div>
 </div>
 
+{% macro book_card(book) %}
+<div class="card rounded-0 border-0 overflow-hidden">
+  <img src="{{book.cover}}" class="card-img-top bg-dark rounded-0 object-fit-cover h-100">
+  <div class="card-body px-0 pt-2 pb-0">
+    <h6 class="card-title text-truncate text-secondary mb-1 fw-semibold">
+      <a href=""
+        class="stretched-link link-custom link-offset-1 link-underline-opacity-0 link-underline-opacity-50-hover">
+        {{book.title}}
+      </a>
+    </h6>
+    <p class="card-text small text-secondary text-truncate">{{book.author|join(', ')}}</p>
+  </div>
+</div>
+{% endmacro %}
+
 <div class="container my-5">
   <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 row-gap-4">
-    {% for book in books %}
-    <div class="col">
-      <div class="card rounded-0 border-0 overflow-hidden">
-        <img src="{{book.cover}}" class="card-img-top bg-dark rounded-0 object-fit-cover h-100">
-        <div class="card-body px-0 pt-2 pb-0">
-          <h6 class="card-title text-truncate text-secondary mb-1 fw-semibold">
-            <a href=""
-              class="stretched-link link-custom link-offset-1 link-underline-opacity-0 link-underline-opacity-50-hover">
-              {{book.title}}
-            </a>
-          </h6>
-          <p class="card-text small text-secondary text-truncate">{{book.author|join(', ')}}</p>
-        </div>
-      </div>
-    </div>
+    {% for book in books if book.type == 'book' %}
+    <div class="col">{{book_card(book)}}</div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="container my-5 pt-4">
+  <h2 class="fw-bold mb-4">Videos</h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-gap-4">
+    {% for book in books if book.type == 'video' %}
+    <div class="col">{{book_card(book)}}</div>
     {% endfor %}
   </div>
 </div>

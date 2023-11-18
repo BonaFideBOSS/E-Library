@@ -30,7 +30,7 @@ def categories():
 
 @views.route("/books/")
 def books():
-    books = db.Books.find({})
+    books = list(db.Books.find({}))
     return render_template("books.html", books=books)
 
 
