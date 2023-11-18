@@ -10,8 +10,88 @@
   <i class="fa-sharp fa-solid fa-books fa-fw me-2"></i>
   <span>{{page_title}}</span>
 </h1>
-<hr>
+<hr class="mb-4">
+
+<div
+  class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between gap-3 align-items-md-end align-items-center">
+  <a href="{{url_for('admin.new_book')}}" class="btn btn-lg btn-custom rounded-0">Add new book</a>
+  <div class="text-center text-md-start">
+    <label for="search">Search:</label>
+    <input name="search" id="search" type="text" class="form-control rounded-0">
+  </div>
+</div>
+
+<div class="table-responsive mt-4">
+  <table class="align-middle w-100 mb-3 display nowrap">
+    <thead class="opacity-75">
+      <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Author</th>
+        <th>Publisher</th>
+        <th>Downloadable</th>
+        <th></th>
+      </tr>
+    </thead>
+  </table>
+</div>
 
 {% endblock %}
 
-{% block page_script %}{% endblock %}
+{% block page_script %}
+<script>
+  var table = new DataTable('table', {
+    ajax: {
+      url: "{{url_for('admin.get_books')}}", type: "POST", dataFilter: function (data) {
+        var json = $.parseJSON(data)
+        return JSON.stringify(json)
+      }
+    },
+    processing: true,
+    serverSide: true,
+    responsive: true,
+    search: { return: true },
+    dom: 'rtip',
+    "pageLength": 5,
+    columnDefs: [
+      { targets: [0, -1], orderable: false, },
+      { responsivePriority: 1, targets: 2 },
+      { responsivePriority: 2, targets: -1 },
+      { responsivePriority: 3, targets: 0 },
+    ],
+    order: [[1, 'desc']],
+    columns: [
+      {
+        data: "cover", render: function (data) {
+          return `<img src="${data}" class="object-fit-cover" width="40px" height="40px">`
+        }
+      },
+      { data: "_id.$oid" },
+      { data: "title" },
+      { data: "year" },
+      { data: "author" },
+      { data: "publisher" },
+      {
+        data: "downloadable", render: function (data) {
+          const green = '<i class="fa-sharp fa-solid fa-circle-check text-success"></i>'
+          const red = '<i class="fa-sharp fa-solid fa-circle-xmark text-danger"></i>'
+          return data ? green : red
+        }
+      },
+      {
+        data: "_id.$oid", render: function (data) {
+          return `<a href="books/manage/${data}" class="btn btn-dark rounded-0 btn-sm"><i class="fa-sharp fa-solid fa-gear"></i></a>`
+        }
+      }
+    ],
+  });
+
+  $("#search").keypress(function (e) {
+    if (e.keyCode === 13) {
+      table.search(this.value).draw()
+    }
+  });
+</script>
+{% endblock %}

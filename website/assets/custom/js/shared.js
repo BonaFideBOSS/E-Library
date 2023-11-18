@@ -45,7 +45,7 @@ $('form').on('submit', function () {
       <span class="spinner-grow spinner-grow-sm opacity-50"></span>
       <span role="status">Loading...</span>
     </div>`
-  const btn = $(this).find('button[type="submit"]')
+  const btn = $(this).find('[type="submit"]')
   if (this.checkValidity()) {
     $(btn).attr('disabled', true)
     if ($(btn).attr('data-show-loader') != 'false') { $(btn).html(loader) }
@@ -77,9 +77,7 @@ $('.resend-otp').on('click', function (e) {
 function previewFile(fileInput, img_class) {
   for (const file of fileInput.files) {
     const reader = new FileReader();
-    reader.onload = function (e) {
-      if (file.type.startsWith('image/')) { $(`.${img_class}`).attr('src', e.target.result) }
-    };
+    reader.onload = function (e) { $(`.${img_class}`).attr('src', e.target.result) };
     reader.readAsDataURL(file);
   }
 }

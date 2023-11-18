@@ -1,0 +1,120 @@
+{% extends 'admin/layout.html' %}
+{% set page_title = 'Manage Book' if 'Save Changes' in form.submit.label|string else 'New Book' %}
+{% set nav_title = 'Books' %}
+
+{% block page_style %}{% endblock %}
+
+{% block page_body %}
+
+<h1 class="fw-bold text-center text-md-start">
+  <i class="fa-sharp fa-solid fa-books fa-fw me-2"></i>
+  <span>{{page_title}}</span>
+</h1>
+<hr class="mb-4">
+
+<form method="post" enctype="multipart/form-data">
+  {{form.hidden_tag()}}
+  <div class="row row-cols-1 row-cols-md-2 row-gap-3">
+    {% set field_icons = {
+    'book_id':'fingerprint',
+    'type':'book',
+    'category_id':'tag',
+    'title': 'pen',
+    'year': 'calendar-days',
+    'author': 'user',
+    'publisher': 'pen-swirl',
+    'summary': 'subtitles',
+    'book': 'file-lines',
+    'video':'film',
+    'cover':'image',
+    'downloadable':'floppy-disk'
+    } %}
+    {% for field in form if field.type not in ['HiddenField','CSRFTokenField','SubmitField'] %}
+    <div class="col">
+      {{field.label(class="form-label small text-secondary fw-medium")}}
+      <div class="input-group input-group-lg">
+        <span class="input-group-text rounded-0">
+          <i class="fa-sharp fa-regular fa-{{field_icons.get(field.name)}} fa-fw"></i>
+        </span>
+        {% if field.type == 'FileField' %}
+        {% set filetypes = "image/*" if field.name == 'cover' else 'application/pdf' %}
+        {{field(accept=filetypes,class="form-control rounded-0")}}
+        {% elif field.type == 'SelectField' %}
+        {{field(class="form-select rounded-0")}}
+        {% else %}
+        {{field(class="form-control rounded-0")}}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="col">
+      <div class="d-flex flex-wrap gap-2">
+        {% if form.cover.data %}
+        <img src="{{form.cover.data}}" class="cover object-fit-cover" width="100px" height="100px">
+        {% else %}
+        <img class="cover object-fit-cover" width="100px" height="100px">
+        {% endif %}
+
+        <div class="content-container">
+          {% if form.book.data and form.type.data == 'book' %}
+          <iframe src="{{form.book.data}}" height="100px"></iframe>
+          {% endif %}
+
+          {% if form.video.data and form.type.data == 'video' %}
+          <iframe src="{{form.video.data}}" height="100px"></iframe>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{form.submit(class="mt-4 btn btn-lg btn-success rounded-0")}}
+</form>
+
+<div class="mt-2 d-flex flex-wrap gap-2">
+  {% if 'Save Changes' in form.submit.label|string %}
+  <form action="{{url_for('admin.delete_db_record',collection='Books',_id=book._id)}}" method="post">
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+    <button type="submit" class="btn btn-lg btn-outline-danger rounded-0">Delete</button>
+  </form>
+  {% endif %}
+  <a href="{{url_for('admin.books')}}" class="btn btn-lg btn-outline-dark rounded-0">Go back</a>
+</div>
+
+{% endblock %}
+
+{% block page_script %}
+<script>
+  function change_type() {
+    const book_icon = 'fa-book'
+    const video_icon = 'fa-film'
+    if ($('select[name="type"]').val() == 'book') {
+      $(`.${video_icon}`).addClass(book_icon)
+      $(`.${video_icon}`).removeClass(video_icon)
+      $('[name="book"]').parent().parent().show()
+      $('[name="video"]').parent().parent().hide()
+    } else {
+      $(`.${book_icon}`).addClass(video_icon)
+      $(`.${book_icon}`).removeClass(book_icon)
+      $('[name="video"]').parent().parent().show()
+      $('[name="book"]').parent().parent().hide()
+    }
+  }
+  change_type()
+  $('select[name="type"]').on('change', change_type)
+
+  $('[name="cover"]').on('change', function () {
+    previewFile(this, "cover")
+  })
+
+  $('[name="book"]').on('change', function () {
+    $('.content-container').html('<iframe height="100px"></iframe>')
+    previewFile(this, "content-container iframe")
+  })
+
+  $('[name="video"]').on('input', function () {
+    $('.content-container').html(`<iframe src="${this.value}" height="100px"></iframe>`)
+  })
+</script>
+{% endblock %}

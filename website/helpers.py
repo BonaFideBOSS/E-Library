@@ -6,6 +6,8 @@ import requests
 import base64
 from flask_wtf.file import FileStorage
 from bson import ObjectId
+from filestack import Client, Filelink
+import io
 
 
 def db_searcher(field: str, string: str):
@@ -50,3 +52,24 @@ def upload_image_to_cloud(image: FileStorage, name: str):
     except:
         pass
     return image_url
+
+
+def upload_pdf_to_cloud(pdf: FileStorage):
+    pdf_url = None
+    try:
+        API_KEY = app.config["FILESTACK_API"]
+        client = Client(API_KEY)
+        response = client.upload(file_obj=io.BytesIO(pdf.read()))
+        pdf_url = response.url
+        print(pdf_url)
+    except Exception as e:
+        print(f"Error: {e}")
+        pass
+    return pdf_url
+
+
+def get_file(url: str):
+    file = Filelink(url.split("/")[-1])
+    file = file.get_content()
+    file = io.BytesIO(file)
+    return file

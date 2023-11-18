@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 from . import db
 from functools import wraps
 from bson import json_util, ObjectId
-from .admin_forms import CategoryForm, NewCategoryForm, UserForm
-from .helpers import encrypt_message, upload_image_to_cloud
+from .admin_forms import CategoryForm, NewCategoryForm, BooksForm, NewBookForm, UserForm
+from .helpers import encrypt_message, upload_image_to_cloud, upload_pdf_to_cloud
 
 db = db.db
 admin = Blueprint("admin", __name__)
@@ -113,6 +113,73 @@ def manage_category(category_id):
     return render_template("admin/manage-category.html", category=category, form=form)
 
 
+@admin.route("/books/new/", methods=["GET", "POST"])
+def new_book():
+    form = NewBookForm()
+
+    if form.validate_on_submit():
+        data = form.data
+        data.pop("book_id")
+        data.pop("csrf_token")
+        data.pop("submit")
+        if data["book"]:
+            data["book"] = upload_pdf_to_cloud(data["book"])
+        data["category_id"] = ObjectId(data["category_id"])
+        data["author"] = data["author"].split(",")
+        data["cover"] = upload_image_to_cloud(data["cover"], data["title"])
+        data["downloadable"] = eval(data["downloadable"])
+        db.Books.insert_one(data)
+        flash("Successfully added a new book.")
+        return redirect(url_for("admin.books"))
+
+    return render_template("admin/manage-books.html", form=form)
+
+
+@admin.route("/books/manage/<book_id>", methods=["GET", "POST"])
+def manage_book(book_id):
+    book = db.Books.find_one({"_id": ObjectId(book_id)})
+    form = BooksForm(
+        book_id=book["_id"],
+        title=book["title"],
+        type=book["type"],
+        category_id=book["category_id"],
+        year=book["year"],
+        cover=book["cover"],
+        author=",".join(book["author"]),
+        publisher=book["publisher"],
+        summary=book["summary"],
+        downloadable=book["downloadable"],
+        book=book["book"] if "book" in book else "",
+        video=book["video"] if "video" in book else "",
+    )
+
+    @authorize_roles("admin")
+    def update_book():
+        data = form.data
+        data.pop("book_id")
+        data.pop("csrf_token")
+        data.pop("submit")
+        data["category_id"] = ObjectId(data["category_id"])
+        data["author"] = data["author"].split(",")
+        data["downloadable"] = eval(data["downloadable"])
+        if data["book"] != book["book"]:
+            data["book"] = upload_pdf_to_cloud(data["book"])
+            form.book.data = data["book"]
+        if data["cover"] != book["cover"]:
+            data["cover"] = upload_image_to_cloud(data["cover"], data["title"])
+            form.cover.data = data["cover"]
+        db.Books.update_one(book, {"$set": data})
+        flash("Details updated successfully!")
+
+    if form.is_submitted():
+        form.book_id.data = book["_id"]
+
+    if form.validate_on_submit():
+        update_book()
+
+    return render_template("admin/manage-books.html", book=book, form=form)
+
+
 @admin.route("/users/manage/<user_id>", methods=["GET", "POST"])
 def manager_user(user_id):
     user = db.Users.find_one({"_id": ObjectId(user_id)})
@@ -162,6 +229,13 @@ def delete_db_record(collection: str, _id: ObjectId):
 def get_categories():
     params = search_params("category")
     data = get_records("Categories", params)
+    return data
+
+
+@admin.route("/get-books", methods=["POST"])
+def get_books():
+    params = search_params("title")
+    data = get_records("Books", params)
     return data
 
 

@@ -12,13 +12,26 @@ def home():
 
 @views.route("/categories/")
 def categories():
-    categories = db.Categories.find({}).sort('category')
+    pipeline = [
+        {"$sort": {"category": 1}},
+        {
+            "$lookup": {
+                "from": "Books",
+                "localField": "_id",
+                "foreignField": "category_id",
+                "as": "books",
+            }
+        },
+        {"$addFields": {"book_count": {"$size": "$books"}}},
+    ]
+    categories = db.Categories.aggregate(pipeline)
     return render_template("categories.html", categories=categories)
 
 
 @views.route("/books/")
 def books():
-    return render_template("books.html")
+    books = db.Books.find({})
+    return render_template("books.html", books=books)
 
 
 @views.route("/about/")
