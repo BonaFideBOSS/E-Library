@@ -75,7 +75,6 @@ class BooksForm(FlaskForm):
     )
     category_id = SelectField(
         "Category",
-        choices=[(c["_id"], c["category"]) for c in db.Categories.find({})],
         validators=[DataRequired("Category is required.")],
     )
     title = StringField("Title", validators=[DataRequired("Title is required.")])
@@ -115,6 +114,10 @@ class BooksForm(FlaskForm):
         validators=[DataRequired(message="Downloadable status is required.")],
     )
     submit = SubmitField("Save Changes")
+
+    def is_submitted(self):
+        self.category_id.choices = [(c["_id"], c["category"]) for c in db.Categories.find({})]
+        return super().is_submitted()
 
 
 class NewBookForm(BooksForm):

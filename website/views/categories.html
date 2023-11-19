@@ -30,14 +30,14 @@
 </div>
 
 <div class="container my-5">
-  <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 row-gap-4">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-gap-4">
     {% for category in categories %}
     <div class="col">
-      <a class="card text-bg-dark rounded-0 border-0" href="">
+      <a class="card text-bg-dark rounded-0 border-0" href="{{url_for('views.books',category_id=category._id)}}">
         <img src="{{category.image}}" class="card-img rounded-0 object-fit-cover h-100">
         <div class="card-img-overlay">
           <h4 class="card-title text-custom fw-bold">{{category.category}}</h4>
-          <p class="card-text small">{{category.book_count}} Books</p>
+          <p class="card-text small">{{category.book_count}} Materials</p>
         </div>
       </a>
     </div>

@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% set page_title = book.title %}
+{% set nav_title = book.title %}
+
+{% block page_style %}
+<style>
+  .hero {
+    position: relative;
+    background-image: url('{{book.cover}}');
+    background-position: center center;
+  }
+
+  .hero .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    backdrop-filter: blur(100px);
+    background-color: rgba(0, 0, 0, .5);
+  }
+
+  .hero .container {
+    position: relative;
+    z-index: 3;
+  }
+</style>
+{% endblock %}
+
+{% macro details(title,detail,align='center') %}
+<p class="d-flex gap-2 align-items-{{align}} justify-content-center justify-content-sm-start">
+  <span class="fw-light small">{{title}}:</span>
+  <span>{{detail|safe}}</span>
+</p>
+{% endmacro %}
+
+{% block page_body %}
+
+<div class="bg-pattern hero py-5">
+  <div class="overlay"></div>
+  <div class="container py-5 text-light">
+    <div class="row row-gap-4">
+      <div class="col-6 col-sm-3 offset-3 offset-sm-0">
+        <img src="{{book.cover}}" width="100%">
+      </div>
+      <div class="col-12 col-sm-9 text-center text-sm-start">
+        <h1 class="fw-semibold mb-4">{{book.title}}</h1>
+        <div class="opacity-75">
+          {{details('Author',book.author|join(', '))}}
+          {{details('Year',book.year)}}
+          {{details('Publisher',book.publisher)}}
+          {{details('Summary',book.summary,'center align-items-sm-start flex-column fw-light')}}
+          {{details('Categories','<a href="'+url_for('views.books',category_id=book.category_id)+'"
+            class="btn btn-sm btn-outline-light rounded-5 px-3">'+book.category[0].category+'</a>')}}
+        </div>
+        <div class="mt-4 d-flex flex-wrap gap-2 justify-content-center justify-content-sm-start">
+          <button class="btn btn-lg btn-custom rounded-0 border-0 py-3 px-5">
+            {{'Watch' if book.type == 'video' else 'Read'}} Online
+          </button>
+          {% if book.downloadable %}
+          <button class="btn btn-lg btn-dark rounded-0 border-0 py-3 px-5">
+            <i class="fa-sharp fa-regular fa-arrow-down-to-line me-2"></i>Download
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block page_script %}{% endblock %}
