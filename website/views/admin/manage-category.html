@@ -1,17 +1,11 @@
 {% extends 'admin/layout.html' %}
 {% set page_title = 'Manage Category' if 'Save Changes' in form.submit.label|string else 'New Category' %}
 {% set nav_title = 'Categories' %}
+{% set page_icon = 'tag' %}
 
 {% block page_style %}{% endblock %}
 
 {% block page_body %}
-
-<h1 class="fw-bold text-center text-md-start">
-  <i class="fa-sharp fa-solid fa-tag fa-fw me-2"></i>
-  <span>{{page_title}}</span>
-</h1>
-<hr class="mb-4">
-
 <form method="post" enctype="multipart/form-data">
   {{form.hidden_tag()}}
   <div class="row row-cols-1 row-cols-md-2 row-gap-3">
@@ -53,10 +47,8 @@
 
 <div class="mt-2 d-flex flex-wrap gap-2">
   {% if 'Save Changes' in form.submit.label|string %}
-  <form action="{{url_for('admin.delete_db_record',collection='Categories',_id=category._id)}}" method="post">
-    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
-    <button type="submit" class="btn btn-lg btn-outline-danger rounded-0">Delete</button>
-  </form>
+  {% from "admin/delete-record.html" import delete_record with context %}
+  {{delete_record('Categories',category._id)}}
   {% endif %}
   <a href="{{url_for('admin.categories')}}" class="btn btn-lg btn-outline-dark rounded-0">Go back</a>
 </div>

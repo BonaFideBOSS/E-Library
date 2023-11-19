@@ -71,6 +71,11 @@
 
   <main class="overflow-y-auto">
     <div class="container py-5">
+      <h1 class="fw-bold text-center text-md-start">
+        <i class="fa-sharp fa-solid fa-{{page_icon}} fa-fw me-2"></i>
+        <span>{{page_title}}</span>
+      </h1>
+      <hr class="mb-4">
       {% block page_body %}{% endblock %}
     </div>
   </main>

@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 from . import db
 from .forms import AccountForm
 from .helpers import encrypt_message, upload_image_to_cloud
-from datetime import datetime
 from bson import ObjectId
 from .auth import add_user_to_session
 from .mailer import send_email_verification_mail

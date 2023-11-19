@@ -128,6 +128,8 @@ def new_book():
         data["author"] = data["author"].split(",")
         data["cover"] = upload_image_to_cloud(data["cover"], data["title"])
         data["downloadable"] = eval(data["downloadable"])
+        data["view_count"] = 0
+        data["download_count"] = 0
         db.Books.insert_one(data)
         flash("Successfully added a new book.")
         return redirect(url_for("admin.books"))

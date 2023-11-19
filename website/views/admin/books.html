@@ -1,17 +1,11 @@
 {% extends 'admin/layout.html' %}
 {% set page_title = 'Books' %}
 {% set nav_title = 'Books' %}
+{% set page_icon = 'books' %}
 
 {% block page_style %}{% endblock %}
 
 {% block page_body %}
-
-<h1 class="fw-bold text-center text-md-start">
-  <i class="fa-sharp fa-solid fa-books fa-fw me-2"></i>
-  <span>{{page_title}}</span>
-</h1>
-<hr class="mb-4">
-
 <div
   class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between gap-3 align-items-md-end align-items-center">
   <a href="{{url_for('admin.new_book')}}" class="btn btn-lg btn-custom rounded-0">Add new book</a>
@@ -29,6 +23,8 @@
         <th>Id</th>
         <th>Title</th>
         <th>Type</th>
+        <th>Views</th>
+        <th>Downloads</th>
         <th>Year</th>
         <th>Author</th>
         <th>Publisher</th>
@@ -61,6 +57,8 @@
       { responsivePriority: 1, targets: 2 },
       { responsivePriority: 2, targets: -1 },
       { responsivePriority: 3, targets: 0 },
+      { responsivePriority: 4, targets: 4 },
+      { responsivePriority: 5, targets: 5 },
     ],
     order: [[1, 'desc']],
     columns: [
@@ -72,8 +70,14 @@
       { data: "_id.$oid" },
       { data: "title" },
       { data: "type" },
+      { data: 'view_count' },
+      { data: 'download_count' },
       { data: "year" },
-      { data: "author" },
+      {
+        data: "author", render: function (data) {
+          return data.join(", ")
+        }
+      },
       { data: "publisher" },
       {
         data: "downloadable", render: function (data) {

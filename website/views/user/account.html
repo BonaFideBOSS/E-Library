@@ -7,7 +7,7 @@
 {% block page_body %}
 
 <div class="bg-pattern py-5 text-center text-xl-start">
-  <div class="container py-5">
+  <div class="container">
     <h1 class="display-1 fw-bold">My Account</h1>
   </div>
 </div>
@@ -74,33 +74,18 @@
   </h3>
 
   <div class="text-center text-lg-start">
-    <button type="button" class="btn btn-lg btn-danger rounded-0" data-bs-toggle="modal"
-      data-bs-target="#delete-account-modal">
+    <button type="button" class="btn btn-lg btn-danger rounded-0" data-bs-toggle="modal" data-bs-target="#delete-modal">
       Delete Account
     </button>
   </div>
 </div>
 
-<div class="modal fade" id="delete-account-modal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-0 border-0 shadow">
-      <div class="modal-body p-4 text-center">
-        <h3 class="fw-semibold text-danger">Account Deletion</h3>
-        <p class="fs-5 mb-0 fw-medium opacity-75">Are you sure you want to permanently delete your account?</p>
-      </div>
-      <form action="{{url_for('user.delete_account')}}" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <input value="{{csrf_token()}}" hidden>
-        <div class="modal-footer flex-nowrap p-0">
-          <button type="submit"
-            class="btn btn-lg btn-danger text-decoration-none col-6 py-3 m-0 rounded-0 border-0">Delete</button>
-          <button type="button" class="btn btn-lg text-decoration-none col-6 py-3 m-0 rounded-0 border-0"
-            data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% from "partial/_macros.html" import delete_modal with context %}
+{{delete_modal(
+title="Account Deletion",
+description="Are you sure you want to permanently delete your account?",
+endpoint=url_for('user.delete_account')
+)}}
 
 {% endblock %}
 

@@ -1,0 +1,21 @@
+{% macro delete_modal(title,description,endpoint) %}
+<div class="modal fade" id="delete-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-0 border-0 shadow">
+      <div class="modal-body p-4 text-center">
+        <h3 class="fw-semibold text-danger">{{title}}</h3>
+        <p class="fs-5 mb-0 fw-medium opacity-75">{{description}}</p>
+      </div>
+      <form action="{{endpoint}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <div class="modal-footer flex-nowrap p-0">
+          <button type="submit"
+            class="btn btn-lg btn-danger text-decoration-none col-6 py-3 m-0 rounded-0 border-0">Delete</button>
+          <button type="button" class="btn btn-lg text-decoration-none col-6 py-3 m-0 rounded-0 border-0"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}

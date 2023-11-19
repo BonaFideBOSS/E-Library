@@ -18,18 +18,7 @@
 <div class="row g-0 text-bg-dark" data-bs-theme="dark">
   <div class="col-12 col-md-8">
     <div class="container p-4 p-md-5 d-flex flex-column justify-content-center h-100">
-      <form action="">
-        <div class="input-group border-bottom border-secondary">
-          <div class="form-floating">
-            <input name="query" id="query" type="text"
-              class="form-control form-control-lg border-0 rounded-0 bg-transparent ps-1" placeholder="">
-            <label for="query" class="ps-0">Search</label>
-          </div>
-          <span class="text-secondary input-group-text border-0 rounded-0 bg-transparent">
-            <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
-          </span>
-        </div>
-      </form>
+      {% include 'partial/search-box.html' %}
     </div>
   </div>
 

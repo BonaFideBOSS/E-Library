@@ -4,21 +4,17 @@ import string
 import secrets
 import requests
 import base64
-from flask_wtf.file import FileStorage
-from bson import ObjectId
-from filestack import Client, Filelink
 import io
+from flask_wtf.file import FileStorage
+from filestack import Client, Filelink
 
 
-def db_searcher(field: str, string: str):
-    query = {"$and": [{field: {"$regex": i, "$options": "i"}} for i in string.split()]}
-    if field == "_id":
-        query = {"_id": ObjectId(string)}
-    if string.lower() in ["true", "false"]:
-        string = bool(string)
-        query = {field: string}
-    if string.lower() == "exists":
-        query = {field: {"$exists": True}}
+def db_searcher(fields: list[str], string: str):
+    query = {"$or": []}
+    for field in fields:
+        query["$or"].append(
+            {"$and": [{field: {"$regex": i, "$options": "i"}} for i in string.split()]}
+        )
     return query
 
 

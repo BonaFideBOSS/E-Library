@@ -1,0 +1,16 @@
+{% from "partial/_macros.html" import delete_modal with context %}
+
+{% macro delete_record(collection,item_id) %}
+
+<button type="button" class="btn btn-lg btn-outline-danger rounded-0" data-bs-toggle="modal"
+  data-bs-target="#delete-modal">
+  Delete
+</button>
+
+{{delete_modal(
+title="Delete Item",
+description="Are you sure you want to permanently delete this item from the database?",
+endpoint=url_for('admin.delete_db_record',collection=collection,_id=item_id)
+)}}
+
+{% endmacro %}

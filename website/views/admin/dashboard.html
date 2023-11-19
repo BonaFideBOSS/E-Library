@@ -1,6 +1,7 @@
 {% extends 'admin/layout.html' %}
 {% set page_title = 'Dashboard' %}
 {% set nav_title = 'Dashboard' %}
+{% set page_icon = 'grid-2' %}
 
 {% block page_style %}
 
@@ -28,12 +29,6 @@
 {% endblock %}
 
 {% block page_body %}
-
-<h1 class="fw-bold text-center text-md-start">
-  <i class="fa-sharp fa-solid fa-grid-2 fa-fw me-2"></i>
-  <span>{{page_title}}</span>
-</h1>
-<hr class="mb-4">
 
 {% macro dash_card(title, icon) %}
 <div class="col">

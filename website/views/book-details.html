@@ -32,7 +32,7 @@
 
 {% macro details(title,detail,align='center') %}
 <p class="d-flex gap-2 align-items-{{align}} justify-content-center justify-content-sm-start">
-  <span class="fw-light small">{{title}}:</span>
+  <span class="fw-light small opacity-75">{{title}}:</span>
   <span>{{detail|safe}}</span>
 </p>
 {% endmacro %}
@@ -48,7 +48,7 @@
       </div>
       <div class="col-12 col-sm-9 text-center text-sm-start">
         <h1 class="fw-semibold mb-4">{{book.title}}</h1>
-        <div class="opacity-75">
+        <div>
           {{details('Author',book.author|join(', '))}}
           {{details('Year',book.year)}}
           {{details('Publisher',book.publisher)}}
@@ -57,13 +57,30 @@
             class="btn btn-sm btn-outline-light rounded-5 px-3">'+book.category[0].category+'</a>')}}
         </div>
         <div class="mt-4 d-flex flex-wrap gap-2 justify-content-center justify-content-sm-start">
-          <button class="btn btn-lg btn-custom rounded-0 border-0 py-3 px-5">
+          <button class="btn btn-lg btn-custom rounded-0 border-0 py-3 px-5" data-bs-toggle="modal"
+            data-bs-target="#book-modal">
             {{'Watch' if book.type == 'video' else 'Read'}} Online
           </button>
+          {% if session.user and book.downloadable %}
+          <form id="download-book" action="{{url_for('views.download_book',book_id=book._id)}}" method="post">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <button type="submit" class="btn btn-lg btn-dark rounded-0 border-0 py-3 px-5">
+              <i class="fa-sharp fa-regular fa-arrow-down-to-line me-2"></i>Download
+            </button>
+          </form>
+          {% endif %}
+        </div>
+        <div
+          class="mt-2 small opacity-50 fw-light d-flex flex-wrap gap-4 justify-content-center justify-content-sm-start">
+          <span>
+            <i class="fa-sharp fa-regular fa-eye me-1"></i>
+            {{book.view_count if book.view_count else 0}} views
+          </span>
           {% if book.downloadable %}
-          <button class="btn btn-lg btn-dark rounded-0 border-0 py-3 px-5">
-            <i class="fa-sharp fa-regular fa-arrow-down-to-line me-2"></i>Download
-          </button>
+          <span>
+            <i class="fa-sharp fa-regular fa-arrow-down-to-line me-1"></i>
+            {{book.download_count if book.download_count else 0}} downloads
+          </span>
           {% endif %}
         </div>
       </div>
@@ -71,6 +88,73 @@
   </div>
 </div>
 
+{% if session.user %}
+<div class="modal fade" id="book-modal" data-bs-theme="dark">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-dark">
+      <div class="modal-header py-2">
+        <h5 class="modal-title text-light fw-light text-truncate">{{book.title}}
+          <span class="text-secondary fs-6">by {{book.author|join(', ')}}</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0 overflow-hidden"></div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="modal fade" id="book-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-0 border-0 shadow">
+      <div class="modal-body p-4 text-center">
+        <h3 class="fw-semibold">Login Required</h3>
+        <p class="fs-5 mb-0 fw-medium opacity-75">
+          You must be logged in to be able to {{'read' if book.type == 'book' else 'watch'}} this {{book.type}}.
+        </p>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <a href="{{url_for('auth.login')}}" type="button"
+          class="btn btn-lg btn-custom text-decoration-none col-6 py-3 m-0 rounded-0 border-0">Login</a>
+        <button type="button" class="btn btn-lg text-decoration-none col-6 py-3 m-0 rounded-0 border-0"
+          data-bs-dismiss="modal">Go back</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
-{% block page_script %}{% endblock %}
+{% block page_script %}
+{% if session.user %}
+<script>
+  function isMobile() {
+    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+    return regex.test(navigator.userAgent);
+  }
+
+  $('#book-modal').on('shown.bs.modal', function () {
+    update_book_stats('view')
+    var iframe = `<iframe src="{{book.book+'#toolbar=0' if book.type == 'book' else book.video}}" class="w-100 h-100"></iframe>`
+    if (isMobile()) {
+      iframe = `<iframe class="w-100 h-100" sandbox="allow-scripts allow-same-origin" src="{{'https://docs.google.com/gview?url='+book.book+'&embedded=true&toolbar=0' if book.book else book.video+'?rel=0'}}"></iframe>`
+    }
+    $('#scroll-to-top').removeClass('show')
+    $('#scroll-to-top').addClass('hide')
+    $(this).find('.modal-body').html(iframe)
+  })
+
+  $('form#download-book').on('submit', function (event) {
+    update_book_stats('download')
+    setTimeout(() => {
+      $(this).find('[type="submit"]').replaceWith(`<button type="submit" class="btn btn-lg btn-dark rounded-0 border-0 py-3 px-5"><i class="fa-sharp fa-regular fa-arrow-down-to-line me-2"></i>Download</button>`)
+    }, 5000);
+  })
+
+  function update_book_stats(stats) {
+    const book_id = "{{book._id}}"
+    $.post("{{url_for('views.update_book_stats')}}", { "book_id": book_id, "stats": stats })
+  }
+</script>
+{% endif %}
+{% endblock %}

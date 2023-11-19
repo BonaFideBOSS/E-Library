@@ -7,13 +7,13 @@
 {% block page_body %}
 
 <div class="bg-pattern py-5 text-center text-xl-start">
-  <div class="container py-5">
+  <div class="container">
     <h1 class="display-1 fw-bold">Books</h1>
   </div>
 </div>
 
 {% macro book_card(book) %}
-<div class="card rounded-0 border-0 overflow-hidden">
+<div class="card rounded-0 border-0 overflow-hidden" title="{{book.title}}">
   <img src="{{book.cover}}" class="card-img-top bg-dark rounded-0 object-fit-cover h-100">
   <div class="card-body px-0 pt-2 pb-0">
     <h6 class="card-title text-truncate text-secondary mb-1 fw-semibold">
@@ -27,6 +27,7 @@
 </div>
 {% endmacro %}
 
+{% if books|selectattr('type', 'equalto', 'book')|list|length > 0 %}
 <div class="container my-5">
   <div class="row row-cols-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 row-gap-4">
     {% for book in books if book.type == 'book' %}
@@ -34,8 +35,10 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
 
-<div class="container my-5 pt-4">
+{% if books|selectattr('type', 'equalto', 'video')|list|length > 0 %}
+<div class="container my-5">
   <h2 class="fw-bold mb-4">Videos</h2>
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-gap-4">
     {% for book in books if book.type == 'video' %}
@@ -43,6 +46,15 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
+
+{% if books|length == 0 %}
+<div class="container my-5">
+  <div class="alert alert-danger rounded-0" role="alert">
+    No books found.
+  </div>
+</div>
+{% endif %}
 
 {% endblock %}
 
