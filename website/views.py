@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, abort, send_file
+from flask import Blueprint, render_template, request, session, abort, send_file, flash
 from . import db
 from bson import ObjectId
 from .helpers import db_searcher, get_file
@@ -17,8 +17,10 @@ def about():
     return render_template("about.html")
 
 
-@views.route("/contact/")
+@views.route("/contact/", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
+        flash("Thank you for contacting us. We'll get back to you soon.")
     return render_template("contact.html")
 
 
