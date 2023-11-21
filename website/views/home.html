@@ -65,7 +65,13 @@
 {% endblock %}
 
 {% block page_script %}
+<script>
+  var is_user_logged_in = false 
+</script>
 {% if session.user %}
+<script>
+  is_user_logged_in = true
+</script>
 <script src="{{url_for('static',filename='custom/js/bookmark.js')}}"></script>
 {% endif %}
 <script src="{{url_for('static',filename='custom/js/home.js')}}"></script>
