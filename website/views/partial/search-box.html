@@ -1,11 +1,8 @@
 <form action="{{url_for('views.books')}}">
-  <div class="input-group border-bottom border-secondary">
-    <div class="form-floating">
-      <input name="search" type="text" class="form-control form-control-lg border-0 rounded-0 bg-transparent ps-1"
-        placeholder="">
-      <label for="search" class="ps-0">Search</label>
-    </div>
-    <button class="btn btn-outline-dark text-secondary border-0 rounded-0" type="button" id="button-addon1">
+  <div class="input-group {{border if border else 'border-bottom'}} border-secondary">
+    <input name="search" type="text" class="form-control form-control-lg border-0 rounded-0 bg-transparent {{'ps-1' if not border}}"
+      placeholder="Search by title or author" required>
+    <button type="submit" class="btn {{'btn-outline-dark' if not border}} text-secondary border-0 rounded-0">
       <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
     </button>
   </div>

@@ -99,6 +99,9 @@
             href="{{url_for('auth.register')}}">Register</a>
           {% endif %}
         </div>
+        <div class="mt-5">
+          {% with border='border rounded-5 p-1' %}{% include 'partial/search-box.html' %}{% endwith %}
+        </div>
       </div>
     </div>
   </div>
