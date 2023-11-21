@@ -4,6 +4,7 @@
 
 {% block page_style %}
 <link rel="stylesheet" href="{{url_for('static',filename='custom/css/home.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='custom/css/category.css')}}">
 {% endblock %}
 
 {% block page_body %}
@@ -37,6 +38,35 @@
   </div>
 </div>
 
+{% macro featured_section(section_title, section_id, link, columns=['3','md-4','lg-5','xl-6']) %}
+<div class="my-5 feature-section">
+  <h2 class="mb-4 d-flex justify-content-between text-nowrap align-items-center gap-3">
+    <span class="fw-semibold text-truncate">{{section_title}}</span>
+    <a class="fs-6 opacity-75 link-dark link-offset-1 link-underline-opacity-50 link-underline-opacity-100-hover"
+      href="{{url_for(link)}}">
+      See all<i class="fa-sharp fa-regular fa-angle-right ms-2"></i>
+    </a>
+  </h2>
+  <div id="{{section_id}}" class="row row-cols-{{columns|join(' row-cols-')}} flex-nowrap overflow-x-auto">
+    <div class="col mx-auto">
+      <div class="custom-loader mx-auto my-5"></div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+<div class="container my-5">
+  {{featured_section("Most Read Books", 'most-read-books', 'views.books')}}
+  {{featured_section("Most Downloaded Books", 'most-downloaded-books', 'views.books')}}
+  {{featured_section("Most Watched Videos", 'most-watched-videos', 'views.books', ['2','md-3','lg-4','xl-5'])}}
+  {{featured_section("Categories", 'featured-categories', 'views.categories', ['2','md-3','lg-4','xl-5'])}}
+</div>
+
 {% endblock %}
 
-{% block page_script %}{% endblock %}
+{% block page_script %}
+{% if session.user %}
+<script src="{{url_for('static',filename='custom/js/bookmark.js')}}"></script>
+{% endif %}
+<script src="{{url_for('static',filename='custom/js/home.js')}}"></script>
+{% endblock %}

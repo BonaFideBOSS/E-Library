@@ -12,21 +12,34 @@ def home():
     return render_template("home.html")
 
 
+@views.route("/about/")
+def about():
+    return render_template("about.html")
+
+
+@views.route("/contact/")
+def contact():
+    return render_template("contact.html")
+
+
+@views.route("/terms/")
+def terms():
+    return render_template("terms.html")
+
+
+@views.route("/privacy/")
+def privacy():
+    return render_template("privacy.html")
+
+
+@views.route("/ping/")
+def ping():
+    return "This site is live!", 200
+
+
 @views.route("/categories/")
 def categories():
-    pipeline = [
-        {"$sort": {"category": 1}},
-        {
-            "$lookup": {
-                "from": "Books",
-                "localField": "_id",
-                "foreignField": "category_id",
-                "as": "books",
-            }
-        },
-        {"$addFields": {"book_count": {"$size": "$books"}}},
-    ]
-    categories = db.Categories.aggregate(pipeline)
+    categories = get_categories()
     return render_template("categories.html", categories=categories)
 
 
@@ -85,26 +98,34 @@ def update_book_stats():
     return "", 200
 
 
-@views.route("/about/")
-def about():
-    return render_template("about.html")
+@views.route("/home-books-api", methods=["POST"])
+def home_books_api():
+    book_type = request.form.get("book_type", type=str)
+    sort = request.form.get("sort", type=str)
+    limit = 10
+    books = list(db.Books.find({"type": book_type}).sort(sort, -1).limit(limit))
+    return render_template("partial/home-features.html", books=books)
 
 
-@views.route("/contact/")
-def contact():
-    return render_template("contact.html")
+@views.route("/home-categories-api", methods=["POST"])
+def home_categories_api():
+    categories = get_categories("book_count", -1, limit=10)
+    return render_template("partial/home-categories.html", categories=categories)
 
 
-@views.route("/terms/")
-def terms():
-    return render_template("terms.html")
-
-
-@views.route("/privacy/")
-def privacy():
-    return render_template("privacy.html")
-
-
-@views.route("/ping/")
-def ping():
-    return "This site is live!", 200
+def get_categories(sort: str = "category", sort_order: int = 1, limit: int = None):
+    limit = [{"$limit": limit}] if limit else []
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "Books",
+                "localField": "_id",
+                "foreignField": "category_id",
+                "as": "books",
+            }
+        },
+        {"$addFields": {"book_count": {"$size": "$books"}}},
+        {"$sort": {sort: sort_order}},
+    ] + limit
+    categories = list(db.Categories.aggregate(pipeline))
+    return categories

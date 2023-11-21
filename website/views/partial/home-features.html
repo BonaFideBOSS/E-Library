@@ -1,0 +1,4 @@
+{% from 'partial/_macros.html' import book_card with context %}
+{% for book in books %}
+<div class="col">{{book_card(book)}}</div>
+{% endfor %}

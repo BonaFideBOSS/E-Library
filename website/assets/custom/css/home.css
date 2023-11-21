@@ -16,3 +16,34 @@
     background: linear-gradient(to bottom, transparent, #000);
     z-index: -1;
 }
+
+.feature-section .row::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-loader {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--color-custom);
+    box-shadow: 32px 0 var(--color-custom), -32px 0 var(--color-custom);
+    position: relative;
+    animation: flash 0.5s ease-out infinite alternate;
+}
+
+@keyframes flash {
+    0% {
+        background-color: rgba(var(--color-darker-rgb), .25);
+        box-shadow: 32px 0 rgba(var(--color-darker-rgb), .25), -32px 0 var(--color-custom);
+    }
+
+    50% {
+        background-color: var(--color-custom);
+        box-shadow: 32px 0 rgba(var(--color-darker-rgb), .25), -32px 0 rgba(var(--color-darker-rgb), .25);
+    }
+
+    100% {
+        background-color: rgba(var(--color-darker-rgb), .25);
+        box-shadow: 32px 0 var(--color-custom), -32px 0 rgba(var(--color-darker-rgb), .25);
+    }
+}

@@ -1,0 +1,4 @@
+{% from 'partial/_macros.html' import category_card with context %}
+{% for category in categories %}
+<div class="col">{{category_card(category)}}</div>
+{% endfor %}

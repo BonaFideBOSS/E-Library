@@ -12,20 +12,7 @@
   </div>
 </div>
 
-{% macro book_card(book) %}
-<div class="card rounded-0 border-0 overflow-hidden" title="{{book.title}}">
-  <img src="{{book.cover}}" class="card-img-top bg-dark rounded-0 object-fit-cover h-100">
-  <div class="card-body px-0 pt-2 pb-0">
-    <h6 class="card-title text-truncate text-secondary mb-1 fw-semibold">
-      <a href="{{url_for('views.view_book',book_id=book._id)}}"
-        class="stretched-link link-custom link-offset-1 link-underline-opacity-0 link-underline-opacity-50-hover">
-        {{book.title}}
-      </a>
-    </h6>
-    <p class="card-text small text-secondary text-truncate">{{book.author|join(', ')}}</p>
-  </div>
-</div>
-{% endmacro %}
+{% from 'partial/_macros.html' import book_card with context %}
 
 {% if books|selectattr('type', 'equalto', 'book')|list|length > 0 %}
 <div class="container my-5">
@@ -58,4 +45,8 @@
 
 {% endblock %}
 
-{% block page_script %}{% endblock %}
+{% block page_script %}
+{% if session.user %}
+<script src="{{url_for('static',filename='custom/js/bookmark.js')}}"></script>
+{% endif %}
+{% endblock %}

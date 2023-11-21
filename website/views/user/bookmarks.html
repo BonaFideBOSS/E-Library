@@ -12,6 +12,41 @@
   </div>
 </div>
 
+{% from 'partial/_macros.html' import book_card with context %}
+
+{% if books|selectattr('type', 'equalto', 'book')|list|length > 0 %}
+<div class="container my-5">
+  <div class="row row-cols-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 row-gap-4">
+    {% for book in books if book.type == 'book' %}
+    <div class="col">{{book_card(book)}}</div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if books|selectattr('type', 'equalto', 'video')|list|length > 0 %}
+<div class="container my-5">
+  <h2 class="fw-bold mb-4">Videos</h2>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-gap-4">
+    {% for book in books if book.type == 'video' %}
+    <div class="col">{{book_card(book)}}</div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if books|length == 0 %}
+<div class="container my-5">
+  <div class="alert alert-danger rounded-0" role="alert">
+    No books found.
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
-{% block page_script %}{% endblock %}
+{% block page_script %}
+{% if session.user %}
+<script src="{{url_for('static',filename='custom/js/bookmark.js')}}"></script>
+{% endif %}
+{% endblock %}

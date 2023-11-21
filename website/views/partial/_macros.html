@@ -1,3 +1,40 @@
+{% macro category_card(category) %}
+<a class="category-card card text-bg-dark rounded-0 border-0" href="{{url_for('views.books',category_id=category._id)}}">
+  <img src="{{category.image}}" class="card-img rounded-0 object-fit-cover h-100">
+  <div class="card-img-overlay">
+    <h4 class="card-title text-custom fw-bold">{{category.category}}</h4>
+    <p class="card-text small">{{category.book_count}} Materials</p>
+  </div>
+</a>
+{% endmacro %}
+
+{% macro bookmark(book_id) %}
+{% if session.user %}
+<div class="position-absolute top-0 end-0 z-2 opacity-75">
+  <button class="bookmark btn {{'btn-success' if book_id|string in session.user.bookmarks else 'btn-dark'}} rounded-0 border-0"
+    data-book-id="{{book_id}}">
+    <i class="fa-sharp fa-regular fa-bookmark"></i>
+  </button>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro book_card(book) %}
+<div class="card rounded-0 border-0 overflow-hidden" title="{{book.title}}">
+  {{bookmark(book._id)}}
+  <img src="{{book.cover}}" class="card-img-top bg-dark rounded-0 object-fit-cover h-100">
+  <div class="card-body px-0 pt-2 pb-0">
+    <h6 class="card-title text-truncate text-secondary mb-1 fw-semibold">
+      <a href="{{url_for('views.view_book',book_id=book._id)}}"
+        class="stretched-link link-custom link-offset-1 link-underline-opacity-0 link-underline-opacity-50-hover">
+        {{book.title}}
+      </a>
+    </h6>
+    <p class="card-text small text-secondary text-truncate">{{book.author|join(', ')}}</p>
+  </div>
+</div>
+{% endmacro %}
+
 {% macro delete_modal(title,description,endpoint) %}
 <div class="modal fade" id="delete-modal">
   <div class="modal-dialog modal-dialog-centered">

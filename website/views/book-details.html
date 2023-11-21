@@ -39,12 +39,17 @@
 
 {% block page_body %}
 
+{% from 'partial/_macros.html' import bookmark with context %}
+
 <div class="bg-pattern hero py-5">
   <div class="overlay"></div>
   <div class="container py-5 text-light">
     <div class="row row-gap-4">
       <div class="col-6 col-sm-3 offset-3 offset-sm-0">
-        <img src="{{book.cover}}" width="100%">
+        <div class="position-relative">
+          <img src="{{book.cover}}" width="100%">
+          {{ bookmark(book._id) }}
+        </div>
       </div>
       <div class="col-12 col-sm-9 text-center text-sm-start">
         <h1 class="fw-semibold mb-4">{{book.title}}</h1>
@@ -127,6 +132,8 @@
 
 {% block page_script %}
 {% if session.user %}
+<script src="{{url_for('static',filename='custom/js/bookmark.js')}}"></script>
+
 <script>
   function isMobile() {
     const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;

@@ -1,0 +1,14 @@
+.category-card {
+  overflow: hidden;
+  height: 150px;
+}
+
+@media (min-width: 768px) {
+  .category-card {
+    height: 250px;
+  }
+}
+
+.category-card .card-img-overlay {
+  background: linear-gradient(145deg, #000, transparent);
+}

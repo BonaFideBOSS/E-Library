@@ -25,7 +25,29 @@ def is_user_logged_in():
 
 @user.route("/bookmarks")
 def bookmarks():
-    return render_template("user/bookmarks.html")
+    user_id = ObjectId(session["user"]["_id"])
+    user = db.Users.find_one({"_id": user_id})
+    bookmarks = user["bookmarks"] if "bookmarks" in user else []
+    bookmarks = [ObjectId(book) for book in bookmarks]
+    books = list(db.Books.find({"_id": {"$in": bookmarks}}))
+    return render_template("user/bookmarks.html", books=books)
+
+
+@user.route("/manage-bookmark", methods=["POST"])
+def manage_bookmark():
+    book_id = request.form.get("book_id")
+    action = request.form.get("action")
+    response = {"success": False}
+    try:
+        user = {"_id": ObjectId(session["user"]["_id"])}
+        book_id = {"bookmarks": book_id}
+        update_query = {"$addToSet": book_id} if action == "add" else {"$pull": book_id}
+        user = db.Users.find_one_and_update(user, update_query, return_document=True)
+        add_user_to_session(user)
+        response["success"] = True
+    except:
+        pass
+    return response
 
 
 @user.route("/account", methods=["GET", "POST"])
