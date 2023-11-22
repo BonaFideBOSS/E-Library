@@ -14,7 +14,12 @@ def home():
 
 @views.route("/about/")
 def about():
-    return render_template("about.html")
+    data = {
+        "categories": db.Categories.count_documents({}),
+        "books": db.Books.count_documents({}),
+        "users": db.Users.count_documents({}),
+    }
+    return render_template("about.html", data=data)
 
 
 @views.route("/contact/", methods=["GET", "POST"])
@@ -104,14 +109,14 @@ def update_book_stats():
 def home_books_api():
     book_type = request.form.get("book_type", type=str)
     sort = request.form.get("sort", type=str)
-    limit = 10
+    limit = 6
     books = list(db.Books.find({"type": book_type}).sort(sort, -1).limit(limit))
     return render_template("partial/home-features.html", books=books)
 
 
 @views.route("/home-categories-api", methods=["POST"])
 def home_categories_api():
-    categories = get_categories("book_count", -1, limit=10)
+    categories = get_categories("book_count", -1, limit=5)
     return render_template("partial/home-categories.html", categories=categories)
 
 

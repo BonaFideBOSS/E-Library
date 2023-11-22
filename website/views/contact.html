@@ -3,7 +3,11 @@
 {% set nav_title = 'Contact' %}
 
 {% block page_style %}
-<link rel="stylesheet" href="{{url_for('static',filename='custom/css/about.css')}}">
+<style>
+  footer.border-top {
+    border-top: none !important;
+  }
+</style>
 {% endblock %}
 
 {% block page_body %}
@@ -14,8 +18,92 @@
   </div>
 </div>
 
-<div class="container my-5">
-  
+<div class="bg-light">
+  <div class="container">
+    <div class="row row-cols-1 row-cols-lg-2 align-items-center">
+
+      <div class="col d-none d-lg-block">
+        <img src="{{url_for('static',filename='img/contact.png')}}" class="img-fluid w-100">
+      </div>
+
+      <div class="col text-center py-5">
+        <h2 class="mb-4 fw-semibold text-custom">Send Us a Message</h2>
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+
+          <div class="input-group input-group-lg mb-4">
+            <span class="text-secondary input-group-text rounded-0">
+              <i class="fa-sharp fa-regular fa-user fa-fw"></i>
+            </span>
+            <div class="form-floating">
+              <input name="name" id="name" type="text" class="form-control bg-transparent rounded-0" placeholder=""
+                required>
+              <label for="name">Fullname</label>
+            </div>
+          </div>
+
+          <div class="input-group input-group-lg mb-4">
+            <span class="text-secondary input-group-text rounded-0">
+              <i class="fa-sharp fa-regular fa-envelope fa-fw"></i>
+            </span>
+            <div class="form-floating">
+              <input name="email" id="email" type="email" class="form-control bg-transparent rounded-0" placeholder=""
+                required>
+              <label for="email">Email</label>
+            </div>
+          </div>
+
+          <div class="input-group input-group-lg mb-4">
+            <span class="text-secondary input-group-text rounded-0">
+              <i class="fa-sharp fa-regular fa-message-captions fa-fw"></i>
+            </span>
+            <div class="form-floating">
+              <textarea name="message" id="message" class="form-control bg-transparent rounded-0" placeholder=""
+                style="height: 150px;" required></textarea>
+              <label for="message">Message</label>
+            </div>
+          </div>
+
+          <div class="text-md-start">
+            <button class="btn btn-lg btn-custom border-0 rounded-0 px-5">
+              Send Message<i class="fa-sharp fa-solid fa-paper-plane ms-2"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row g-0 row-cols-1 row-cols-lg-2 bg-custom-gradient">
+  <div
+    class="col py-4 py-lg-5 px-md-5 text-light d-flex flex-column justify-content-center align-items-center align-items-lg-start">
+    <h5>The library is open today</h5>
+    <h1 class="fw-semibold">6:00 AM - 8:00 PM</h1>
+  </div>
+  <div
+    class="col py-4 py-lg-5 px-3 px-md-5 text-light d-flex flex-column justify-content-center text-center text-lg-end gap-3">
+    <div>
+      <h5 class="mb-2 small opacity-75">Phone</h5>
+      <h5><a href="tel:+97412345678" class="link-light text-decoration-none">+974 1234 5678</a></h5>
+    </div>
+    <div>
+      <h5 class="mb-2 small opacity-75">Email</h5>
+      <h5><a href="mail:contact@almi.info" class="link-light text-decoration-none">contact@almir.info</a></h1>
+    </div>
+    <div>
+      <h5 class="mb-2 small opacity-75">Address</h5>
+      <h5>123 Aptech Avenue, Doha, Qatar</h5>
+    </div>
+  </div>
+</div>
+
+<div class="overflow-hidden bg-custom">
+  <iframe class="w-100"
+    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14433.948217384712!2d51.5428231!3d25.2541962!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45cf910e08feb3%3A0xd4aa7a447cd2c7d0!2sAptech%20Qatar%20Computer%20Education%20Centre!5e0!3m2!1sen!2sqa!4v1700681326924!5m2!1sen!2sqa"
+    height="350" style="border:0;" allowfullscreen="" loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 
 {% endblock %}

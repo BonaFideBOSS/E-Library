@@ -123,6 +123,7 @@
 
 input:focus,
 select:focus,
+textarea:focus,
 .input-group:focus-within {
   border-color: var(--color-custom) !important;
 }

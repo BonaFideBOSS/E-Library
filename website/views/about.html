@@ -2,13 +2,65 @@
 {% set page_title = 'About' %}
 {% set nav_title = 'About' %}
 
-{% block page_style %}{% endblock %}
+{% block page_style %}
+<style>
+  .text-justify {
+    text-align: justify;
+  }
+
+  .card {
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .card-icon {
+    position: absolute;
+    bottom: -25px;
+    right: -25px;
+    opacity: .25;
+  }
+</style>
+{% endblock %}
 
 {% block page_body %}
 
 <div class="bg-pattern py-5 text-center text-xl-start">
   <div class="container">
     <h1 class="display-1 fw-bold">About Us</h1>
+  </div>
+</div>
+
+<div class="container my-5 text-center">
+  <img src="{{url_for('static',filename='img/logo-bg-light.png')}}" width="100px">
+  <h1 class="my-3 fw-bold text-custom-gradient">E-Library</h1>
+  <h4>An Online Library Management System</h4>
+  <p class="mt-3 fs-5 opacity-75 col-lg-10 offset-lg-1 text-justify">Our Online Library Management System efficiently
+    oversees the details of library resources, including books and their authors, as well as the members borrowing these
+    books. Our system is meticulously designed to be computerized, streamlining and automating various operations such
+    as member information management, book issuance and returns. This transition to a computerized library not only
+    enhances the efficiency of maintenance tasks but also significantly diminishes the manual workload, contributing to
+    a more streamlined and effective library management experience.</p>
+</div>
+
+{% macro about_card(title, icon) %}
+<div class="col">
+  <div class="card text-decoration-none link-light rounded-0 bg-custom-gradient border-0">
+    <div class="card-body">
+      <h5 class="card-title">{{title}}</h5>
+      <h1 class="card-title display-1 fw-semibold">{{data[title|lower]}}</h1>
+      <div class="card-icon">
+        <i class="fa-sharp fa-solid fa-{{icon}} fa-10x text-dark"></i>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+<div class="container my-5">
+  <div class="row g-2 row-cols-2 row-cols-md-3 row-gap-4">
+    {{about_card('Categories','tag')}}
+    {{about_card('Books','books')}}
+    {{about_card('Users','user-group')}}
   </div>
 </div>
 
