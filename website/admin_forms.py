@@ -1,3 +1,4 @@
+# Import modules
 from . import db
 from flask_wtf import FlaskForm
 from wtforms import (
@@ -14,8 +15,11 @@ from flask_wtf.file import FileField, FileAllowed, FileSize, FileRequired
 from wtforms.validators import DataRequired, ValidationError, Length, NumberRange
 from datetime import datetime
 
-db = db.db
+db = db.db  # Get database
+# Set default configuration
+# Max file size limit
 max_file_size = 20  # in MB
+# Types of supported files
 supported_filetypes = [
     "jpg",
     "png",
@@ -29,6 +33,7 @@ supported_filetypes = [
     "heic",
     "pdf",
 ]
+# Common file validators
 file_validators = [
     FileAllowed(
         upload_set=supported_filetypes,
@@ -41,15 +46,24 @@ file_validators = [
 ]
 
 
+# Category Form - Used to validate and render category form
+# Used when editing a category
 class CategoryForm(FlaskForm):
+    # Category Id
     category_id = StringField("Category Id", render_kw={"disabled": True})
+    # Category name
     category = StringField(
         "Category", validators=[DataRequired("Category title is required.")]
     )
+    # Category icon
     icon = StringField("Icon", validators=[DataRequired("Icon is required.")])
+    # Category image - an image acting as background image
+    # Not required when editing
     image = FileField("Image", validators=file_validators)
+    # Edit button
     submit = SubmitField("Save Changes")
 
+    # Function to check whether category with the same name already exist
     def validate_category(self, category):
         query = {"category": category.data}
         query["_id"] = {"$ne": self.category_id.data}
@@ -58,14 +72,20 @@ class CategoryForm(FlaskForm):
             raise ValidationError("This category is already defined.")
 
 
+# Category Form - Used when creating a new category
+# Same structure as the main category form
 class NewCategoryForm(CategoryForm):
+    # Hides the category Id field
     category_id = HiddenField()
+    # Category image is required
     image = FileField(
         "Image", validators=[FileRequired("An image is required.")] + file_validators
     )
+    # Add button
     submit = SubmitField("Add New Category")
 
 
+# Books Form - Used to validate books and videos when updating them
 class BooksForm(FlaskForm):
     book_id = StringField("Book Id", render_kw={"disabled": True})
     type = SelectField(
@@ -116,7 +136,9 @@ class BooksForm(FlaskForm):
     submit = SubmitField("Save Changes")
 
     def is_submitted(self):
-        self.category_id.choices = [(c["_id"], c["category"]) for c in db.Categories.find({})]
+        self.category_id.choices = [
+            (c["_id"], c["category"]) for c in db.Categories.find({})
+        ]
         return super().is_submitted()
 
 

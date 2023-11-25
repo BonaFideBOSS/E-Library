@@ -11,31 +11,43 @@ db = db.db
 
 # Registration Form - Used to validate new account creation
 class RegisterForm(FlaskForm):
+    # Username field
     username = StringField(
         "Username",
         validators=[
+            # Required field
             DataRequired(message="Please enter a username."),
+            # Minimum length = 4 | Maximum length = 26
             Length(min=4, max=26, message="Username must be 4 to 26 characters long."),
         ],
     )
+    # Email field
     email = EmailField(
         "Email",
         validators=[
+            # Required field
             DataRequired(message="Please enter an email address."),
+            # Must be valid email address
             Email(message="Please enter a valid email address."),
         ],
     )
+    # Password field
     password = PasswordField(
         "Password",
         validators=[
+            # Requiredd field
             DataRequired(message="Please enter a password."),
+            # Minimum length = 8
             Length(min=8, message="Password must be at least 8 characters long."),
         ],
     )
 
+    # Function to validate if email is unique
     def validate_email(self, email):
+        # Find any user with the same email
         user = get_user_by_email(email.data)
         if user:
+            # Raise an error if a user is found
             raise ValidationError("This email is already is use.")
 
 

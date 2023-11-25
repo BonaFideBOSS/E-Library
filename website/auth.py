@@ -17,6 +17,7 @@ def is_user_logged_in():
         return redirect(url_for("views.home"))
 
 
+# Function to add user to the session
 def add_user_to_session(user: dict, remember: bool = False):
     user["_id"] = str(user["_id"])
     session["user"] = user

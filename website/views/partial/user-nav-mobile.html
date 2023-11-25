@@ -10,7 +10,7 @@
             <div class="accordion-body py-0">
                 <nav class="nav flex-column text-start fs-3">
                     {% if session.user.roles %}
-                    {% if 'admin' in session.user.roles %}
+                    {% if 'staff' in session.user.roles %}
                     <a class="nav-link {{'link-custom' if 'admin' in request.url else 'link-secondary'}}"
                         href="{{url_for('admin.dashboard')}}">
                         <i class="fa-sharp fa-solid fa-grid-2 fa-fw me-2"></i>
