@@ -8,6 +8,7 @@ import threading
 db = db.db
 
 
+# Function to send email verification link to user's email address
 def send_email_verification_mail(user_email: str):
     @copy_current_request_context
     def send_mail(to):
@@ -26,6 +27,7 @@ def send_email_verification_mail(user_email: str):
     threading.Thread(target=send_mail, args=(user_email,)).start()
 
 
+# Function to send a password recovery mail
 def send_password_reset_mail(user_email: str):
     @copy_current_request_context
     def send_mail(to):

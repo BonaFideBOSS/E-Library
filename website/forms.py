@@ -1,3 +1,4 @@
+# Import modules
 from . import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, PasswordField, HiddenField
@@ -60,6 +61,7 @@ class LoginForm(FlaskForm):
         "Password", validators=[DataRequired(message="Please enter your password.")]
     )
 
+    # Function to validate login credentials
     def validate(self, extra_validators=None):
         if not super().validate():
             return False
@@ -70,6 +72,7 @@ class LoginForm(FlaskForm):
             self.email.errors.append("Email not found.")
             return False
 
+        # Check if password matches with saved password
         password = encrypt_message(self.password.data)
         if password != user["password"]:
             self.password.errors.append("Password is incorrect.")
@@ -78,6 +81,7 @@ class LoginForm(FlaskForm):
         return True
 
 
+# Forgot Password Form
 class ForgotPassword(FlaskForm):
     email = EmailField(
         "Email", validators=[DataRequired(message="Please enter your email address.")]
@@ -95,6 +99,7 @@ class ForgotPassword(FlaskForm):
         return True
 
 
+# Reset Password Form
 class ResetPassword(FlaskForm):
     user_id = HiddenField()
     token = HiddenField()
@@ -124,6 +129,7 @@ class ResetPassword(FlaskForm):
         return True
 
 
+# Form to Validate Account Details
 class AccountForm(FlaskForm):
     user_id = HiddenField()
     max_file_size = 5  # in MB
@@ -181,5 +187,6 @@ class AccountForm(FlaskForm):
             raise ValidationError("This email is already is use.")
 
 
+# Function to get user details from the database by email
 def get_user_by_email(email: str):
     return db.Users.find_one({"email": email})

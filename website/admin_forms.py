@@ -87,54 +87,72 @@ class NewCategoryForm(CategoryForm):
 
 # Books Form - Used to validate books and videos when updating them
 class BooksForm(FlaskForm):
+    # Book Id
     book_id = StringField("Book Id", render_kw={"disabled": True})
+    # Type of content - Book or Video
     type = SelectField(
         "Type",
         choices=[("book", "Book"), ("video", "Video")],
         validators=[DataRequired(message="Material type is required.")],
     )
+    # Category Id
     category_id = SelectField(
         "Category",
         validators=[DataRequired("Category is required.")],
     )
+    # Title of the book or Video
     title = StringField("Title", validators=[DataRequired("Title is required.")])
+    # Publish year of the book or video
     year = IntegerField(
         "Publish Year",
         validators=[
             DataRequired("Year is required."),
             NumberRange(
                 min=1000,
+                # Cannot be greater than current year
                 max=datetime.now().year,
                 message="Year cannot be greater than current year.",
             ),
         ],
     )
+    # Author name
     author = StringField(
         "Author(s) (split by comma if more than one)",
         validators=[DataRequired("Author is required.")],
     )
+    # Publisher name
     publisher = StringField(
         "Publisher", validators=[DataRequired("Publisher is required.")]
     )
+    # Book/Video summary or description
     summary = TextAreaField(
         "Summary",
         validators=[
             DataRequired("Summary is required."),
             Length(
-                min=10, max=1000, message="Summary must be 10 to 1000 characters long."
+                # Maximum of 1000 characters
+                min=10,
+                max=1000,
+                message="Summary must be 10 to 1000 characters long.",
             ),
         ],
     )
+    # Book cover or video thumbnail
     cover = FileField("Cover", validators=file_validators)
+    # Book - PDF format
     book = FileField("Book (PDF)", validators=file_validators)
+    # Video - URL string
     video = StringField("Video (YouTube Embed URL)")
+    # Downloadable - True or False
     downloadable = SelectField(
         "Downloadable",
         choices=[(False, "False"), (True, "True")],
         validators=[DataRequired(message="Downloadable status is required.")],
     )
+    # Submit button
     submit = SubmitField("Save Changes")
 
+    # Function to show a list of categories
     def is_submitted(self):
         self.category_id.choices = [
             (c["_id"], c["category"]) for c in db.Categories.find({})
@@ -142,21 +160,29 @@ class BooksForm(FlaskForm):
         return super().is_submitted()
 
 
+# New Book/Video Form - Inheritance the main BookForm Class
 class NewBookForm(BooksForm):
+    # Book Id is hidden
+    # Book Id is automatically generated
     book_id = HiddenField()
+    # Cover/thumbnail is required
     cover = FileField(
         "Cover", validators=[FileRequired("Cover is required.")] + file_validators
     )
+    # Add button
     submit = SubmitField("Add New Book")
 
+    # Function to validate details
     def validate(self, extra_validators=None):
         if not super().validate():
             return False
 
+        # Throws an error if type of content is "book" and book is not given
         if self.type.data == "book" and self.book.data == None:
             self.book.errors.append("Book is required.")
             return False
 
+        # Throws an error if type of content is "video" and video is not given
         if self.type.data == "video" and self.video.data == "":
             self.video.errors.append("Video is required.")
             return False
@@ -164,21 +190,30 @@ class NewBookForm(BooksForm):
         return True
 
 
+# User Form - Used to validate user details
 class UserForm(FlaskForm):
+    # User Id
     user_id = StringField("User Id", render_kw={"disabled": True})
+    # User avatar
     avatar = StringField("Avatar", validators=[DataRequired("Avatar is required.")])
+    # Username field
     username = StringField(
         "Username", validators=[DataRequired("Username cannot be blank.")]
     )
+    # Email field
     email = EmailField("Email", validators=[DataRequired("Email cannot be blank.")])
+    # Password field
     password = PasswordField("Password")
+    # Verified field - True or False
     verified = SelectField(
         "Verified",
         choices=[(False, "False"), (True, "True")],
         validators=[DataRequired(message="Verification status is required.")],
     )
+    # User roles
     roles = StringField("Roles")
 
+    # Function to validate if email is unique
     def validate_email(self, email):
         user = db.Users.find_one(
             {"_id": {"$ne": self.user_id.data}, "email": email.data}

@@ -50,6 +50,7 @@ def manage_bookmark():
     return response
 
 
+# Function to render user's account page
 @user.route("/account", methods=["GET", "POST"])
 def account():
     form = AccountForm()
@@ -72,11 +73,13 @@ def account():
             data["password"] = encrypt_message(data["password"])
 
         if data["avatar"]:
+            # Upload avatar to cloud
             avatar_url = upload_image_to_cloud(data["avatar"], form.username.data)
             data["avatar"] = avatar_url if avatar_url else user["avatar"]
         else:
             data["avatar"] = user["avatar"]
 
+        # Update user details
         user = db.Users.find_one_and_update(
             {"_id": ObjectId(user["_id"])},
             {"$set": data},
@@ -90,6 +93,7 @@ def account():
     return render_template("user/account.html", form=form)
 
 
+# Function to let user delete their account
 @user.route("/delete-account", methods=["POST"])
 def delete_account():
     try:

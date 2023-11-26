@@ -9,6 +9,7 @@ from flask_wtf.file import FileStorage
 from filestack import Client, Filelink
 
 
+# Function to form a search query to pass to the database to filter records
 def db_searcher(fields: list[str], string: str):
     query = {"$or": []}
     for field in fields:
@@ -36,6 +37,7 @@ def generate_token(count: int = 32):
     return secrets.token_urlsafe(count)
 
 
+# Function to upload an image file to cloud
 def upload_image_to_cloud(image: FileStorage, name: str):
     image_url = None
     try:
@@ -50,6 +52,7 @@ def upload_image_to_cloud(image: FileStorage, name: str):
     return image_url
 
 
+# Function to store a PDF file to cloud
 def upload_pdf_to_cloud(pdf: FileStorage):
     pdf_url = None
     try:

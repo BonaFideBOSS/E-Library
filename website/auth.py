@@ -1,3 +1,4 @@
+# Import modules
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from . import db
 from .forms import RegisterForm, LoginForm, ForgotPassword, ResetPassword
@@ -8,9 +9,10 @@ from .mailer import send_email_verification_mail, send_password_reset_mail
 
 db = db.db
 auth = Blueprint("auth", __name__)
-DEFAULT_AVATAR = "/assets/img/user.jpg"
+DEFAULT_AVATAR = "/assets/img/user.jpg"  # Set default avatar for new users
 
 
+# Function to check whether a user is already logged-in
 @auth.before_request
 def is_user_logged_in():
     if "user" in session and request.endpoint in ["auth.login", "auth.register"]:
@@ -24,10 +26,13 @@ def add_user_to_session(user: dict, remember: bool = False):
     session.permanent = remember
 
 
+# Register page
 @auth.route("/register/", methods=["GET", "POST"])
 def register():
+    # Initialize Form
     form = RegisterForm()
 
+    # Validate form on submit
     if form.validate_on_submit():
         user = form.data
         user.pop("csrf_token")
@@ -44,10 +49,13 @@ def register():
     return render_template("auth/register.html", form=form)
 
 
+# Login page
 @auth.route("/login/", methods=["GET", "POST"])
 def login():
+    # Initialize Login Form
     form = LoginForm()
 
+    # Validate form on submit
     if form.validate_on_submit():
         user = db.Users.find_one({"email": form.email.data})
         remember = True if request.form.get("remember") == "on" else False
@@ -58,6 +66,7 @@ def login():
     return render_template("auth/login.html", form=form)
 
 
+# Function to resend email verfication link
 @auth.route("/resend-email-verification-mail", methods=["POST"])
 def resend_email_verification_mail():
     user_email = session["user"]["email"]
@@ -65,6 +74,7 @@ def resend_email_verification_mail():
     return ""
 
 
+# Function to remove user from session
 @auth.route("/logout/", methods=["POST"])
 def logout():
     session.pop("user", None)
@@ -72,6 +82,7 @@ def logout():
     return redirect(request.referrer)
 
 
+# Function to verify email address
 @auth.route("/verify-email/")
 def verify_email():
     user_id = request.args.get("_id")
@@ -93,6 +104,7 @@ def verify_email():
         return redirect(url_for("views.home"))
 
 
+# Page to send forgot password request
 @auth.route("/forgot-password/", methods=["GET", "POST"])
 def forgot_password():
     form = ForgotPassword()
@@ -105,6 +117,7 @@ def forgot_password():
     return render_template("auth/forgot-password.html", form=form)
 
 
+# Page to reset password
 @auth.route("/reset-password/", methods=["GET", "POST"])
 def reset_password():
     user_id = request.args.get("_id")
