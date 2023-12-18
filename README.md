@@ -4,6 +4,10 @@
 
 <br>
 
+[![Video Demonstration](https://i.ytimg.com/vi/bo6WEnQ8j3g/maxresdefault.jpg)](https://youtu.be/bo6WEnQ8j3g)
+
+<br>
+
 ## How to run the application locally?
 This guide is for Windows 10+ only.
 
