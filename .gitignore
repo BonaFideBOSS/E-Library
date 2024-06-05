@@ -3,3 +3,4 @@ venv
 config.py
 config_sharable.py
 *.tmp
+.env
